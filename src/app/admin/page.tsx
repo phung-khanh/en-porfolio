@@ -53,6 +53,7 @@ function AdminDashboard() {
   const [newVideo, setNewVideo] = useState<Partial<VideoType>>({});
   const [showAddProject, setShowAddProject] = useState(false);
   const [showAddVideo, setShowAddVideo] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -109,12 +110,12 @@ function AdminDashboard() {
     }
   };
 
-  const addProject = async () => {
+  const addProject = async (formData: FormData) => {
     try {
+      setIsUploading(true);
       const response = await fetch("/api/projects", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProject),
+        body: formData,
       });
 
       if (response.ok) {
@@ -122,9 +123,14 @@ function AdminDashboard() {
         setProjects((prev) => [project, ...prev]);
         setNewProject({});
         setShowAddProject(false);
+      } else {
+        const error = await response.json();
+        console.error("Error adding project:", error);
       }
     } catch (error) {
       console.error("Error adding project:", error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -299,6 +305,10 @@ function AdminDashboard() {
               <ProjectsTab
                 projects={projects}
                 deleteProject={deleteProject}
+                addProject={addProject}
+                showAddProject={showAddProject}
+                setShowAddProject={setShowAddProject}
+                isUploading={isUploading}
                 theme={theme}
               />
             )}
@@ -497,7 +507,60 @@ function ThemeTab({ tempTheme, handleThemeChange, saveTheme, theme }: any) {
 }
 
 // Projects Tab Component
-function ProjectsTab({ projects, deleteProject, theme }: any) {
+function ProjectsTab({
+  projects,
+  deleteProject,
+  addProject,
+  showAddProject,
+  setShowAddProject,
+  isUploading,
+  theme,
+}: any) {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    category: "",
+    tags: "",
+    file: null as File | null,
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.category ||
+      !formData.file
+    ) {
+      alert("Please fill in all required fields and select an image");
+      return;
+    }
+
+    const submitData = new FormData();
+    submitData.append("title", formData.title);
+    submitData.append("description", formData.description);
+    submitData.append("category", formData.category);
+    submitData.append("tags", formData.tags);
+    submitData.append("file", formData.file);
+
+    await addProject(submitData);
+
+    // Reset form
+    setFormData({
+      title: "",
+      description: "",
+      category: "",
+      tags: "",
+      file: null,
+    });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormData((prev) => ({ ...prev, file }));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -505,6 +568,7 @@ function ProjectsTab({ projects, deleteProject, theme }: any) {
           Projects
         </h2>
         <button
+          onClick={() => setShowAddProject(!showAddProject)}
           className="flex items-center space-x-2 px-4 py-2 rounded-lg text-white font-semibold"
           style={{ backgroundColor: theme.primary }}
         >
@@ -512,6 +576,195 @@ function ProjectsTab({ projects, deleteProject, theme }: any) {
           <span>Add Project</span>
         </button>
       </div>
+
+      {/* Add Project Form */}
+      {showAddProject && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          className="p-6 rounded-2xl shadow-lg"
+          style={{
+            backgroundColor: theme.background,
+            border: `1px solid ${theme.primary}20`,
+          }}
+        >
+          <h3 className="text-xl font-bold mb-4" style={{ color: theme.text }}>
+            Add New Project
+          </h3>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: theme.text }}
+                >
+                  Title *
+                </label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, title: e.target.value }))
+                  }
+                  className="w-full px-3 py-2 rounded border-2 focus:outline-none"
+                  style={{
+                    backgroundColor: theme.background,
+                    borderColor: `${theme.primary}30`,
+                    color: theme.text,
+                  }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: theme.text }}
+                >
+                  Category *
+                </label>
+                <input
+                  type="text"
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      category: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 rounded border-2 focus:outline-none"
+                  style={{
+                    backgroundColor: theme.background,
+                    borderColor: `${theme.primary}30`,
+                    color: theme.text,
+                  }}
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: theme.text }}
+              >
+                Description *
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 rounded border-2 focus:outline-none"
+                style={{
+                  backgroundColor: theme.background,
+                  borderColor: `${theme.primary}30`,
+                  color: theme.text,
+                }}
+                rows={3}
+                required
+              />
+            </div>
+
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: theme.text }}
+              >
+                Tags (comma-separated)
+              </label>
+              <input
+                type="text"
+                value={formData.tags}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, tags: e.target.value }))
+                }
+                placeholder="e.g., React, TypeScript, Web Development"
+                className="w-full px-3 py-2 rounded border-2 focus:outline-none"
+                style={{
+                  backgroundColor: theme.background,
+                  borderColor: `${theme.primary}30`,
+                  color: theme.text,
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: theme.text }}
+              >
+                Project Image *
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full px-3 py-2 rounded border-2 focus:outline-none"
+                style={{
+                  backgroundColor: theme.background,
+                  borderColor: `${theme.primary}30`,
+                  color: theme.text,
+                }}
+                required
+              />
+              {formData.file && (
+                <p
+                  className="text-sm mt-1"
+                  style={{ color: theme.text, opacity: 0.7 }}
+                >
+                  Selected: {formData.file.name}
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => setShowAddProject(false)}
+                className="px-4 py-2 rounded-lg border-2 transition-colors duration-200"
+                style={{
+                  borderColor: theme.primary,
+                  color: theme.primary,
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isUploading}
+                className="flex items-center space-x-2 px-6 py-2 rounded-lg text-white font-semibold transition-all duration-200 disabled:opacity-50"
+                style={{ backgroundColor: theme.primary }}
+              >
+                {isUploading ? (
+                  <>
+                    <motion.div
+                      className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    />
+                    <span>Uploading...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save size={20} />
+                    <span>Add Project</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </motion.div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project: Project) => (

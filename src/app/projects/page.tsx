@@ -173,13 +173,14 @@ export default function ProjectsPage() {
                   >
                     {/* Project Image */}
                     <div className="relative h-64 overflow-hidden">
-                      <div
-                        className="w-full h-full bg-gradient-to-br opacity-80"
-                        style={{
-                          background: `linear-gradient(135deg, ${theme.primary}20 0%, ${theme.secondary}20 100%)`,
-                        }}
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 flex items-center justify-center">
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div
                           className="w-16 h-16 rounded-full flex items-center justify-center"
                           style={{ backgroundColor: theme.primary }}

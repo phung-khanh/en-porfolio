@@ -1,1 +1,96 @@
 @import "tailwindcss"
+;
+
+/* Glass and blur utilities */
+.blur-ios {
+  backdrop-filter: blur(24px) saturate(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
+}
+
+.glass-ios {
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Liquid glass (trendy, higher contrast, subtle gradient + border) */
+.glass-liquid {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.10));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 16px;
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.glass-liquid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(120% 120% at 0% 0%, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.06) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure content sits above the decorative overlay */
+.glass-liquid>* {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-liquid-contrast {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.12));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* Hover lift */
+.hover-lift {
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Scroll fade/slide reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 700ms ease, transform 700ms ease;
+}
+
+/* Friendly color defaults for light/dark backgrounds */
+:root {
+  --friendly-bg: #0ea5e91a;
+  /* primary with alpha */
+  --friendly-ring: #0ea5e9;
+}
+
+.avatar-ring {
+  position: relative;
+}
+
+.avatar-ring::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 9999px;
+
+  filter: blur(10px);
+  opacity: 0.9;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.avatar-ring:hover::after {
+  opacity: 1;
+  transform: scale(1.03);
+}

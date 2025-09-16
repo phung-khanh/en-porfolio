@@ -4,19 +4,19 @@ import { AdminSettings, Theme } from "@/shared/types";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 const defaultTheme: Theme = {
-  primary: "#0ea5e9",
+  primary: "#F08787",
   secondary: "#d946ef",
   accent: "#f97316",
-  background: "#ffffff",
+  background: "#F3F2EC",
   text: "#1f2937",
-  header: "#9EC6F3",
-  footer: "#819A91",
+  header: "#FFC7A7",
+  footer: "#FEE2AD",
 };
 
 const defaultSettings: AdminSettings = {
   theme: defaultTheme,
   siteTitle: "Hong Anh",
-  siteDescription: "Creative designs that inspire and engage",
+  siteDescription: "From Noel with love",
   socialLinks: {
     instagram: "",
     dribbble: "",

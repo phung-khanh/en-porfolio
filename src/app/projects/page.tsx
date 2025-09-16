@@ -66,14 +66,30 @@ export default function ProjectsPage() {
   }, [projects, searchTerm, selectedCategory]);
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 relative overflow-hidden">
+      {/* Blurred ambient background shapes */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div
+          className="absolute -top-20 -left-20 w-[36rem] h-[36rem] rounded-full blur-3xl opacity-20"
+          style={{
+            background: `radial-gradient(closest-side, ${theme.primary}, transparent)`,
+          }}
+        />
+        <div
+          className="absolute bottom-0 right-[-10%] w-[42rem] h-[42rem] rounded-full blur-3xl opacity-10"
+          style={{
+            background: `radial-gradient(closest-side, ${theme.text}40, transparent)`,
+          }}
+        />
+      </div>
       {/* Header Section */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
           >
             <h1
@@ -94,8 +110,9 @@ export default function ProjectsPage() {
           <motion.div
             className="flex flex-col md:flex-row gap-4 mb-12"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.1 }}
           >
             {/* Search */}
             <div className="relative flex-1">
@@ -109,9 +126,9 @@ export default function ProjectsPage() {
                 placeholder="Search projects..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all duration-200"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all duration-200 bg-opacity-50 backdrop-blur-md"
                 style={{
-                  backgroundColor: theme.background,
+                  backgroundColor: `${theme.background}CC`,
                   borderColor: `${theme.primary}30`,
                   color: theme.text,
                 }}
@@ -124,7 +141,7 @@ export default function ProjectsPage() {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 backdrop-blur-sm ${
                     selectedCategory === category
                       ? "text-white"
                       : "opacity-70 hover:opacity-100"
@@ -133,7 +150,7 @@ export default function ProjectsPage() {
                     backgroundColor:
                       selectedCategory === category
                         ? theme.primary
-                        : "transparent",
+                        : `${theme.primary}10`,
                     color: selectedCategory === category ? "white" : theme.text,
                     border: `1px solid ${theme.primary}30`,
                   }}
@@ -163,12 +180,17 @@ export default function ProjectsPage() {
                   key={project.id}
                   className="group cursor-pointer"
                   initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: Math.min(index * 0.06, 0.3),
+                  }}
+                  whileHover={{ y: -8, scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                 >
                   <div
-                    className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                    className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-opacity-60 backdrop-blur-md"
                     style={{ backgroundColor: theme.background }}
                   >
                     {/* Project Image */}
@@ -176,13 +198,13 @@ export default function ProjectsPage() {
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
                       />
                       {/* Hover overlay */}
-                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm" />
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div
-                          className="w-16 h-16 rounded-full flex items-center justify-center"
+                          className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg"
                           style={{ backgroundColor: theme.primary }}
                         >
                           <ExternalLink size={24} className="text-white" />
@@ -212,7 +234,7 @@ export default function ProjectsPage() {
                         {project.title}
                       </h3>
                       <p
-                        className="text-sm opacity-70 mb-4 line-clamp-2"
+                        className="text-sm opacity-80 mb-4 line-clamp-2"
                         style={{ color: theme.text }}
                       >
                         {project.description}
@@ -223,7 +245,7 @@ export default function ProjectsPage() {
                         {project.tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
-                            className="px-2 py-1 rounded text-xs opacity-60"
+                            className="px-2 py-1 rounded text-xs opacity-80 backdrop-blur-sm"
                             style={{
                               backgroundColor: `${theme.primary}20`,
                               color: theme.text,
@@ -234,7 +256,7 @@ export default function ProjectsPage() {
                         ))}
                         {project.tags.length > 3 && (
                           <span
-                            className="px-2 py-1 rounded text-xs opacity-60"
+                            className="px-2 py-1 rounded text-xs opacity-80 backdrop-blur-sm"
                             style={{
                               backgroundColor: `${theme.primary}20`,
                               color: theme.text,

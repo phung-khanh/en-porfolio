@@ -324,6 +324,7 @@ function AdminDashboard() {
                 tempSettings={tempSettings}
                 setTempSettings={setTempSettings}
                 theme={theme}
+                updateSettings={updateSettings}
               />
             )}
           </motion.div>
@@ -876,7 +877,12 @@ function VideosTab({ videos, deleteVideo, theme }: any) {
 }
 
 // Settings Tab Component
-function SettingsTab({ tempSettings, setTempSettings, theme }: any) {
+function SettingsTab({
+  tempSettings,
+  setTempSettings,
+  theme,
+  updateSettings,
+}: any) {
   return (
     <div className="space-y-6">
       <div
@@ -940,6 +946,21 @@ function SettingsTab({ tempSettings, setTempSettings, theme }: any) {
               rows={3}
             />
           </div>
+        </div>
+
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={() =>
+              updateSettings({
+                siteTitle: tempSettings.siteTitle,
+                siteDescription: tempSettings.siteDescription,
+              })
+            }
+            className="flex items-center space-x-2 px-6 py-3 rounded-lg text-white font-semibold transition-all duration-200 hover:shadow-lg"
+            style={{ backgroundColor: theme.primary }}
+          >
+            <span>Save</span>
+          </button>
         </div>
       </div>
     </div>

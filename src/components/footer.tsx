@@ -86,7 +86,7 @@ export default function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm opacity-80" style={{ color: theme.text }}>
-              © 2024 {settings.siteTitle}. All rights reserved.
+              © 2025 {settings.siteTitle}. All rights reserved.
             </p>
             <div className="flex items-center space-x-1">
               <span
@@ -109,7 +109,7 @@ export default function Footer() {
                 className="text-sm opacity-80"
                 style={{ color: theme.text }}
               >
-                by a creative designer
+                by Noel
               </span>
             </div>
           </div>

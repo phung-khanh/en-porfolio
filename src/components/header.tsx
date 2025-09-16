@@ -2,7 +2,7 @@
 
 import { useTheme } from "@/shared/lib/theme-context";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Palette, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -87,21 +87,6 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Admin Link */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link
-              href="/admin"
-              className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-200 hover:bg-opacity-10"
-              style={{
-                color: theme.primary,
-                backgroundColor: `${theme.primary}10`,
-              }}
-            >
-              <Palette size={16} />
-              <span className="text-sm font-medium">Admin</span>
-            </Link>
-          </div>
-
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
@@ -144,15 +129,6 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
-              <Link
-                href="/admin"
-                className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-                style={{ color: theme.primary }}
-                onClick={() => setIsOpen(false)}
-              >
-                <Palette size={16} />
-                <span>Admin</span>
-              </Link>
             </div>
           </motion.div>
         )}

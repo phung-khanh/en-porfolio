@@ -3,7 +3,8 @@
 import { useTheme } from "@/shared/lib/theme-context";
 import { Project } from "@/shared/types";
 import { AnimatePresence, motion } from "framer-motion";
-import { ExternalLink, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function ProjectsPage() {
@@ -163,113 +164,155 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      {/* Projects Grid */}
+      {/* Vertical Timeline by Year */}
       <section className="pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={`${searchTerm}-${selectedCategory}`}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  className="group cursor-pointer"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: Math.min(index * 0.06, 0.3),
-                  }}
-                  whileHover={{ y: -8, scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <div
-                    className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-opacity-60 backdrop-blur-md"
-                    style={{ backgroundColor: theme.background }}
-                  >
-                    {/* Project Image */}
-                    <div className="relative h-64 overflow-hidden">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
-                      />
-                      {/* Hover overlay */}
-                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm" />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div
-                          className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg"
-                          style={{ backgroundColor: theme.primary }}
-                        >
-                          <ExternalLink size={24} className="text-white" />
-                        </div>
-                      </div>
-
-                      {/* Category Badge */}
-                      <div className="absolute top-4 left-4">
-                        <span
-                          className="px-3 py-1 rounded-full text-xs font-medium"
-                          style={{
-                            backgroundColor: theme.primary,
-                            color: "white",
-                          }}
-                        >
-                          {project.category}
-                        </span>
-                      </div>
+              {Object.entries(
+                [...filteredProjects]
+                  .sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime()
+                  )
+                  .reduce<Record<string, Project[]>>((acc, project) => {
+                    const year = new Date(project.createdAt)
+                      .getFullYear()
+                      .toString();
+                    acc[year] = acc[year] || [];
+                    acc[year].push(project);
+                    return acc;
+                  }, {})
+              )
+                .sort((a, b) => Number(b[0]) - Number(a[0]))
+                .map(([year, items]) => (
+                  <div key={year} className="relative">
+                    <div className="sticky top-20 z-10 mb-6">
+                      <span
+                        className="px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-md"
+                        style={{
+                          backgroundColor: `${theme.primary}15`,
+                          color: theme.text,
+                          border: `1px solid ${theme.primary}30`,
+                        }}
+                      >
+                        {year}
+                      </span>
                     </div>
 
-                    {/* Project Info */}
-                    <div className="p-6">
-                      <h3
-                        className="text-xl font-bold mb-2 group-hover:opacity-80 transition-opacity duration-200"
-                        style={{ color: theme.text }}
-                      >
-                        {project.title}
-                      </h3>
-                      <p
-                        className="text-sm opacity-80 mb-4 line-clamp-2"
-                        style={{ color: theme.text }}
-                      >
-                        {project.description}
-                      </p>
+                    <div className="relative pl-14">
+                      {/* Vertical guide line */}
+                      <div
+                        className="absolute left-5 top-0 bottom-0 w-px opacity-30"
+                        style={{ background: `${theme.primary}80` }}
+                      />
 
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-2 py-1 rounded text-xs opacity-80 backdrop-blur-sm"
-                            style={{
-                              backgroundColor: `${theme.primary}20`,
-                              color: theme.text,
-                            }}
+                      {items.map((project, index) => (
+                        <motion.div
+                          key={project.id}
+                          className="relative mb-12"
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, amount: 0.4 }}
+                          transition={{ duration: 0.6 }}
+                        >
+                          {/* Wave marker + number */}
+                          <div className="absolute -left-1 top-2">
+                            <motion.svg
+                              width="24"
+                              height="60"
+                              viewBox="0 0 24 60"
+                              fill="none"
+                            >
+                              <motion.path
+                                d="M12 0 C6 10,18 20,12 30 C6 40,18 50,12 60"
+                                stroke={theme.primary}
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                initial={{ pathLength: 0 }}
+                                whileInView={{ pathLength: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 1.2 }}
+                              />
+                            </motion.svg>
+                          </div>
+
+                          {/* Card */}
+                          <div
+                            className="rounded-2xl overflow-hidden shadow-lg transition-all duration-300 glass-ios"
+                            style={{ backgroundColor: `${theme.background}CC` }}
                           >
-                            {tag}
-                          </span>
-                        ))}
-                        {project.tags.length > 3 && (
-                          <span
-                            className="px-2 py-1 rounded text-xs opacity-80 backdrop-blur-sm"
-                            style={{
-                              backgroundColor: `${theme.primary}20`,
-                              color: theme.text,
-                            }}
-                          >
-                            +{project.tags.length - 3}
-                          </span>
-                        )}
-                      </div>
+                            {/* 4:3 Image */}
+                            <div
+                              className="w-full overflow-hidden relative"
+                              style={{ aspectRatio: "4 / 3" }}
+                            >
+                              <Image
+                                src={project.image}
+                                alt={project.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 800px"
+                                quality={90}
+                                className="object-cover will-change-transform"
+                                style={{
+                                  filter: "contrast(1.05) saturate(1.05)",
+                                }}
+                                priority={false}
+                              />
+                            </div>
+
+                            {/* Text below image */}
+                            <div className="p-5">
+                              <div className="flex items-center justify-between mb-2">
+                                <h3
+                                  className="text-xl font-semibold"
+                                  style={{ color: theme.text }}
+                                >
+                                  {project.title}
+                                </h3>
+                                <span
+                                  className="text-xs opacity-60"
+                                  style={{ color: theme.text }}
+                                >
+                                  {new Date(
+                                    project.createdAt
+                                  ).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <p
+                                className="text-sm opacity-80"
+                                style={{ color: theme.text }}
+                              >
+                                {project.description}
+                              </p>
+                              <div className="mt-3 flex flex-wrap gap-2">
+                                {project.tags.slice(0, 4).map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="px-2 py-1 rounded text-xs backdrop-blur-sm"
+                                    style={{
+                                      backgroundColor: `${theme.primary}20`,
+                                      color: theme.text,
+                                    }}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
-                </motion.div>
-              ))}
+                ))}
             </motion.div>
           </AnimatePresence>
 

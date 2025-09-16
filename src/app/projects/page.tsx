@@ -214,7 +214,7 @@ export default function ProjectsPage() {
                         style={{ background: `${theme.primary}80` }}
                       />
 
-                      {items.map((project, index) => (
+                      {items.map((project) => (
                         <motion.div
                           key={project.id}
                           className="relative mb-12"

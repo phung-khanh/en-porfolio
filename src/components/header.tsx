@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "@/shared/lib/theme-context";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,118 +21,88 @@ export default function Header() {
   const { theme, settings } = useTheme();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white/90 backdrop-blur-md shadow-lg" : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-500 ${
+        isScrolled ? "backdrop-blur-xl shadow-md" : "backdrop-blur-sm"
       }`}
       style={{
-        backgroundColor: isScrolled ? `${theme.header}90` : "transparent",
-        borderBottom: isScrolled ? `1px solid ${theme.primary}20` : "none",
+        background: isScrolled
+          ? "linear-gradient(to right, rgba(255,255,255,0.15), rgba(255,255,255,0.05))"
+          : "rgba(255,255,255,0.05)",
+        borderColor: `${theme.primary}30`,
       }}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <motion.div
-              className="w-8 h-8 rounded-full"
-              style={{ backgroundColor: theme.primary }}
-              whileHover={{ scale: 1.1, rotate: 180 }}
-              transition={{ duration: 0.3 }}
-            />
-            <span
-              className="text-xl font-bold font-display"
+      <div className="max-w-6xl mx-auto flex justify-between items-center h-14 px-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2">
+          <div
+            className="w-6 h-6 rounded-full"
+            style={{ backgroundColor: theme.primary }}
+          />
+          <span className="font-semibold" style={{ color: theme.text }}>
+            {settings.siteTitle}
+          </span>
+        </Link>
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex gap-6">
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`text-sm transition-colors ${
+                pathname === item.href
+                  ? "font-semibold"
+                  : "opacity-70 hover:opacity-100"
+              }`}
               style={{ color: theme.text }}
             >
-              {settings.siteTitle}
-            </span>
-          </Link>
+              {item.name}
+            </Link>
+          ))}
+        </nav>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                  pathname === item.href
-                    ? "text-opacity-100"
-                    : "text-opacity-70 hover:text-opacity-100"
-                }`}
-                style={{ color: theme.text }}
-              >
-                {item.name}
-                {pathname === item.href && (
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5"
-                    style={{ backgroundColor: theme.primary }}
-                    layoutId="activeTab"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md transition-colors duration-200"
-              style={{ color: theme.text }}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
+        {/* Mobile menu */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden p-2"
+          style={{ color: theme.text }}
+        >
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
 
-      {/* Mobile Navigation */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className="md:hidden"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div
-              className="px-2 pt-2 pb-3 space-y-1 shadow-lg"
-              style={{ backgroundColor: theme.header }}
+      {/* Mobile dropdown */}
+      {isOpen && (
+        <motion.div
+          className="md:hidden flex flex-col px-4 pb-4 backdrop-blur-md"
+          style={{ backgroundColor: `${theme.header}70` }}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+        >
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={() => setIsOpen(false)}
+              className="py-2 text-sm opacity-80 hover:opacity-100"
+              style={{ color: theme.text }}
             >
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
-                    pathname === item.href
-                      ? "text-opacity-100"
-                      : "text-opacity-70 hover:text-opacity-100"
-                  }`}
-                  style={{ color: theme.text }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              {item.name}
+            </Link>
+          ))}
+        </motion.div>
+      )}
     </motion.header>
   );
 }

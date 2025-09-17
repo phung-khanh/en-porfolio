@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -38,9 +37,11 @@ export default function AdminPage() {
   );
 }
 
+/* -------------------- Dashboard Wrapper -------------------- */
 function AdminDashboard() {
   const { theme, settings, updateTheme, updateSettings } = useTheme();
   const { user, logout } = useAuth();
+
   const [activeTab, setActiveTab] = useState<
     "dashboard" | "theme" | "projects" | "videos" | "settings"
   >("dashboard");
@@ -52,13 +53,13 @@ function AdminDashboard() {
   const [newProject, setNewProject] = useState<Partial<Project>>({});
   const [newVideo, setNewVideo] = useState<Partial<VideoType>>({});
   const [showAddProject, setShowAddProject] = useState(false);
-  const [showAddVideo, setShowAddVideo] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  /* -------------------- Fetch Data -------------------- */
   const fetchData = async () => {
     try {
       const [projectsRes, videosRes, settingsRes] = await Promise.all([
@@ -89,6 +90,7 @@ function AdminDashboard() {
     }
   };
 
+  /* -------------------- Handlers -------------------- */
   const handleThemeChange = (key: keyof Theme, value: string) => {
     setTempTheme((prev) => ({ ...prev, [key]: value }));
   };
@@ -100,11 +102,7 @@ function AdminDashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ theme: tempTheme }),
       });
-
-      if (response.ok) {
-        updateTheme(tempTheme);
-        // Show success notification
-      }
+      if (response.ok) updateTheme(tempTheme);
     } catch (error) {
       console.error("Error saving theme:", error);
     }
@@ -123,9 +121,6 @@ function AdminDashboard() {
         setProjects((prev) => [project, ...prev]);
         setNewProject({});
         setShowAddProject(false);
-      } else {
-        const error = await response.json();
-        console.error("Error adding project:", error);
       }
     } catch (error) {
       console.error("Error adding project:", error);
@@ -136,51 +131,23 @@ function AdminDashboard() {
 
   const deleteProject = async (id: string) => {
     try {
-      const response = await fetch(`/api/projects/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        setProjects((prev) => prev.filter((p) => p.id !== id));
-      }
+      const response = await fetch(`/api/projects/${id}`, { method: "DELETE" });
+      if (response.ok) setProjects((prev) => prev.filter((p) => p.id !== id));
     } catch (error) {
       console.error("Error deleting project:", error);
     }
   };
 
-  const addVideo = async () => {
-    try {
-      const response = await fetch("/api/videos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newVideo),
-      });
-
-      if (response.ok) {
-        const video = await response.json();
-        setVideos((prev) => [video, ...prev]);
-        setNewVideo({});
-        setShowAddVideo(false);
-      }
-    } catch (error) {
-      console.error("Error adding video:", error);
-    }
-  };
-
   const deleteVideo = async (id: string) => {
     try {
-      const response = await fetch(`/api/videos/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        setVideos((prev) => prev.filter((v) => v.id !== id));
-      }
+      const response = await fetch(`/api/videos/${id}`, { method: "DELETE" });
+      if (response.ok) setVideos((prev) => prev.filter((v) => v.id !== id));
     } catch (error) {
       console.error("Error deleting video:", error);
     }
   };
 
+  /* -------------------- Tabs -------------------- */
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
     { id: "theme", label: "Theme", icon: Palette },
@@ -189,96 +156,86 @@ function AdminDashboard() {
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
+  /* -------------------- Loading -------------------- */
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500/30 via-purple-500/30 to-pink-500/30 backdrop-blur-3xl">
         <motion.div
           className="text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
           <motion.div
-            className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"
+            className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full mx-auto mb-4"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
-          <p className="text-lg font-medium" style={{ color: theme.text }}>
-            Loading...
-          </p>
+          <p className="text-lg font-medium text-dark">Loading...</p>
         </motion.div>
       </div>
     );
   }
 
+  /* -------------------- Layout -------------------- */
   return (
-    <div
-      className="min-h-screen pt-20"
-      style={{ backgroundColor: theme.background }}
-    >
+    <div className="relative min-h-screen pt-20 text-dark">
+      {/* Liquid Background Animation */}
+      <motion.div
+        className="fixed inset-0 -z-10 backdrop-blur-3xl"
+        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        style={{
+          backgroundImage:
+            "linear-gradient(120deg, rgba(59,130,246,0.3), rgba(168,85,247,0.3), rgba(236,72,153,0.3))",
+          backgroundSize: "200% 200%",
+        }}
+      />
+
       {/* Header */}
-      <div className="border-b" style={{ borderColor: `${theme.primary}20` }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold" style={{ color: theme.text }}>
-                Admin Dashboard
-              </h1>
-              <p className="text-sm opacity-70" style={{ color: theme.text }}>
-                Manage your portfolio content and settings
-              </p>
+      <div className="border-b border-white/20 backdrop-blur-xl bg-white/5">
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center py-6">
+          <div>
+            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+            <p className="text-sm opacity-70">Manage your content & settings</p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-md">
+              <User size={20} />
+              <span className="text-sm font-medium">{user?.username}</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <div
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg"
-                style={{ backgroundColor: `${theme.primary}10` }}
-              >
-                <User size={20} style={{ color: theme.primary }} />
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: theme.text }}
-                >
-                  {user?.username}
-                </span>
-              </div>
-              <button
-                onClick={logout}
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors duration-200"
-              >
-                <LogOut size={20} className="text-red-500" />
-                <span className="text-sm text-red-500">Logout</span>
-              </button>
-            </div>
+            <button
+              onClick={logout}
+              className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/40 transition-all"
+            >
+              <LogOut size={20} />
+              <span className="text-sm">Logout</span>
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Tabs */}
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                    activeTab === tab.id
-                      ? "text-white"
-                      : "opacity-70 hover:opacity-100"
-                  }`}
-                  style={{
-                    backgroundColor:
-                      activeTab === tab.id ? theme.primary : "transparent",
-                    color: activeTab === tab.id ? "white" : theme.text,
-                  }}
-                >
-                  <Icon size={20} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
+      {/* Tabs */}
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="flex flex-wrap gap-3 mb-8">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <motion.button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-medium transition-all duration-300 ${
+                  activeTab === tab.id
+                    ? "bg-blue-500 text-dark shadow-md"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <Icon size={20} />
+                <span>{tab.label}</span>
+              </motion.button>
+            );
+          })}
         </div>
 
         {/* Tab Content */}
@@ -288,17 +245,16 @@ function AdminDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
           >
             {activeTab === "dashboard" && (
-              <DashboardTab projects={projects} videos={videos} theme={theme} />
+              <DashboardTab projects={projects} videos={videos} />
             )}
             {activeTab === "theme" && (
               <ThemeTab
                 tempTheme={tempTheme}
                 handleThemeChange={handleThemeChange}
                 saveTheme={saveTheme}
-                theme={theme}
               />
             )}
             {activeTab === "projects" && (
@@ -309,21 +265,15 @@ function AdminDashboard() {
                 showAddProject={showAddProject}
                 setShowAddProject={setShowAddProject}
                 isUploading={isUploading}
-                theme={theme}
               />
             )}
             {activeTab === "videos" && (
-              <VideosTab
-                videos={videos}
-                deleteVideo={deleteVideo}
-                theme={theme}
-              />
+              <VideosTab videos={videos} deleteVideo={deleteVideo} />
             )}
             {activeTab === "settings" && (
               <SettingsTab
                 tempSettings={tempSettings}
                 setTempSettings={setTempSettings}
-                theme={theme}
                 updateSettings={updateSettings}
               />
             )}
@@ -334,135 +284,81 @@ function AdminDashboard() {
   );
 }
 
-// Dashboard Tab Component
-function DashboardTab({
-  projects,
-  videos,
-  theme,
-}: {
-  projects: Project[];
-  videos: VideoType[];
-  theme: Theme;
-}) {
+/* -------------------- Dashboard Tab -------------------- */
+function DashboardTab({ projects, videos }: any) {
+  const cards = [
+    {
+      label: "Total Projects",
+      value: projects.length,
+      icon: Image,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      label: "Total Videos",
+      value: videos.length,
+      icon: Video,
+      color: "from-pink-500 to-red-500",
+    },
+    {
+      label: "Categories",
+      value: new Set(projects.map((p: any) => p.category)).size,
+      icon: Database,
+      color: "from-purple-500 to-indigo-500",
+    },
+    {
+      label: "Total Views",
+      value: "1.2K",
+      icon: Eye,
+      color: "from-green-500 to-emerald-500",
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <motion.div
-        className="p-6 rounded-2xl shadow-lg"
-        style={{
-          backgroundColor: theme.background,
-          border: `1px solid ${theme.primary}20`,
-        }}
-        whileHover={{ y: -5 }}
-        transition={{ duration: 0.2 }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm opacity-70" style={{ color: theme.text }}>
-              Total Projects
-            </p>
-            <p className="text-3xl font-bold" style={{ color: theme.primary }}>
-              {projects.length}
-            </p>
-          </div>
-          <Image size={32} style={{ color: theme.primary }} />
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="p-6 rounded-2xl shadow-lg"
-        style={{
-          backgroundColor: theme.background,
-          border: `1px solid ${theme.primary}20`,
-        }}
-        whileHover={{ y: -5 }}
-        transition={{ duration: 0.2 }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm opacity-70" style={{ color: theme.text }}>
-              Total Videos
-            </p>
-            <p
-              className="text-3xl font-bold"
-              style={{ color: theme.secondary }}
+      {cards.map((card, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: i * 0.1 }}
+          className="p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg"
+          whileHover={{ scale: 1.05, y: -5 }}
+        >
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm opacity-70">{card.label}</p>
+              <p className="text-3xl font-bold">{card.value}</p>
+            </div>
+            <motion.div
+              animate={{ y: [0, -5, 0] }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className={`p-3 rounded-full bg-gradient-to-r ${card.color}`}
             >
-              {videos.length}
-            </p>
+              <card.icon size={28} className="text-dark" />
+            </motion.div>
           </div>
-          <Video size={32} style={{ color: theme.secondary }} />
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="p-6 rounded-2xl shadow-lg"
-        style={{
-          backgroundColor: theme.background,
-          border: `1px solid ${theme.primary}20`,
-        }}
-        whileHover={{ y: -5 }}
-        transition={{ duration: 0.2 }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm opacity-70" style={{ color: theme.text }}>
-              Categories
-            </p>
-            <p className="text-3xl font-bold" style={{ color: theme.accent }}>
-              {new Set(projects.map((p) => p.category)).size}
-            </p>
-          </div>
-          <Database size={32} style={{ color: theme.accent }} />
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="p-6 rounded-2xl shadow-lg"
-        style={{
-          backgroundColor: theme.background,
-          border: `1px solid ${theme.primary}20`,
-        }}
-        whileHover={{ y: -5 }}
-        transition={{ duration: 0.2 }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm opacity-70" style={{ color: theme.text }}>
-              Total Views
-            </p>
-            <p className="text-3xl font-bold" style={{ color: theme.primary }}>
-              1.2K
-            </p>
-          </div>
-          <Eye size={32} style={{ color: theme.primary }} />
-        </div>
-      </motion.div>
+        </motion.div>
+      ))}
     </div>
   );
 }
 
-// Theme Tab Component
-function ThemeTab({ tempTheme, handleThemeChange, saveTheme, theme }: any) {
+/* -------------------- Theme Tab -------------------- */
+function ThemeTab({ tempTheme, handleThemeChange, saveTheme }: any) {
   return (
     <div className="space-y-6">
-      <div
-        className="p-6 rounded-2xl shadow-lg"
-        style={{
-          backgroundColor: theme.background,
-          border: `1px solid ${theme.primary}20`,
-        }}
-      >
-        <h2 className="text-2xl font-bold mb-6" style={{ color: theme.text }}>
-          Theme Customization
-        </h2>
-
+      <div className="p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg">
+        <h2 className="text-2xl font-bold mb-6">Theme Customization</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {Object.entries(tempTheme).map(([key, value]) => (
             <div key={key}>
-              <label
-                className="block text-sm font-medium mb-2 capitalize"
-                style={{ color: theme.text }}
-              >
-                {key.replace(/([A-Z])/g, " $1").trim()}
+              <label className="block text-sm font-medium mb-2 capitalize">
+                {key}
               </label>
               <div className="flex items-center space-x-3">
                 <input
@@ -471,8 +367,7 @@ function ThemeTab({ tempTheme, handleThemeChange, saveTheme, theme }: any) {
                   onChange={(e) =>
                     handleThemeChange(key as keyof Theme, e.target.value)
                   }
-                  className="w-12 h-10 rounded border-2 cursor-pointer"
-                  style={{ borderColor: theme.primary }}
+                  className="w-12 h-10 rounded border-2 border-amber-50 cursor-pointer"
                 />
                 <input
                   type="text"
@@ -480,34 +375,28 @@ function ThemeTab({ tempTheme, handleThemeChange, saveTheme, theme }: any) {
                   onChange={(e) =>
                     handleThemeChange(key as keyof Theme, e.target.value)
                   }
-                  className="flex-1 px-3 py-2 rounded border-2 focus:outline-none"
-                  style={{
-                    backgroundColor: theme.background,
-                    borderColor: `${theme.primary}30`,
-                    color: theme.text,
-                  }}
+                  className="flex-1 px-3 py-2 rounded border-2 border-white/30 bg-white/50 backdrop-blur-lg"
                 />
               </div>
             </div>
           ))}
         </div>
-
         <div className="mt-6 flex justify-end">
-          <button
+          <motion.button
             onClick={saveTheme}
-            className="flex items-center space-x-2 px-6 py-3 rounded-lg text-white font-semibold transition-all duration-200 hover:shadow-lg"
-            style={{ backgroundColor: theme.primary }}
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center space-x-2 px-6 py-3 rounded-lg text-dark font-semibold bg-gradient-to-r from-blue-500 to-pink-500 shadow-lg"
           >
             <Save size={20} />
             <span>Save Theme</span>
-          </button>
+          </motion.button>
         </div>
       </div>
     </div>
   );
 }
 
-// Projects Tab Component
+/* -------------------- Projects Tab -------------------- */
 function ProjectsTab({
   projects,
   deleteProject,
@@ -515,301 +404,48 @@ function ProjectsTab({
   showAddProject,
   setShowAddProject,
   isUploading,
-  theme,
 }: any) {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "",
-    tags: "",
-    file: null as File | null,
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (
-      !formData.title ||
-      !formData.description ||
-      !formData.category ||
-      !formData.file
-    ) {
-      alert("Please fill in all required fields and select an image");
-      return;
-    }
-
-    const submitData = new FormData();
-    submitData.append("title", formData.title);
-    submitData.append("description", formData.description);
-    submitData.append("category", formData.category);
-    submitData.append("tags", formData.tags);
-    submitData.append("file", formData.file);
-
-    await addProject(submitData);
-
-    // Reset form
-    setFormData({
-      title: "",
-      description: "",
-      category: "",
-      tags: "",
-      file: null,
-    });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setFormData((prev) => ({ ...prev, file }));
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold" style={{ color: theme.text }}>
-          Projects
-        </h2>
-        <button
+        <h2 className="text-2xl font-bold">Projects</h2>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          className="flex items-center space-x-2 px-4 py-2 rounded-lg text-dark font-semibold bg-gradient-to-r from-blue-500 to-pink-500"
           onClick={() => setShowAddProject(!showAddProject)}
-          className="flex items-center space-x-2 px-4 py-2 rounded-lg text-white font-semibold"
-          style={{ backgroundColor: theme.primary }}
         >
           <Plus size={20} />
           <span>Add Project</span>
-        </button>
+        </motion.button>
       </div>
 
-      {/* Add Project Form */}
-      {showAddProject && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="p-6 rounded-2xl shadow-lg"
-          style={{
-            backgroundColor: theme.background,
-            border: `1px solid ${theme.primary}20`,
-          }}
-        >
-          <h3 className="text-xl font-bold mb-4" style={{ color: theme.text }}>
-            Add New Project
-          </h3>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: theme.text }}
-                >
-                  Title *
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                  className="w-full px-3 py-2 rounded border-2 focus:outline-none"
-                  style={{
-                    backgroundColor: theme.background,
-                    borderColor: `${theme.primary}30`,
-                    color: theme.text,
-                  }}
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: theme.text }}
-                >
-                  Category *
-                </label>
-                <input
-                  type="text"
-                  value={formData.category}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      category: e.target.value,
-                    }))
-                  }
-                  className="w-full px-3 py-2 rounded border-2 focus:outline-none"
-                  style={{
-                    backgroundColor: theme.background,
-                    borderColor: `${theme.primary}30`,
-                    color: theme.text,
-                  }}
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: theme.text }}
-              >
-                Description *
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-                className="w-full px-3 py-2 rounded border-2 focus:outline-none"
-                style={{
-                  backgroundColor: theme.background,
-                  borderColor: `${theme.primary}30`,
-                  color: theme.text,
-                }}
-                rows={3}
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: theme.text }}
-              >
-                Tags (comma-separated)
-              </label>
-              <input
-                type="text"
-                value={formData.tags}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, tags: e.target.value }))
-                }
-                placeholder="e.g., React, TypeScript, Web Development"
-                className="w-full px-3 py-2 rounded border-2 focus:outline-none"
-                style={{
-                  backgroundColor: theme.background,
-                  borderColor: `${theme.primary}30`,
-                  color: theme.text,
-                }}
-              />
-            </div>
-
-            <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: theme.text }}
-              >
-                Project Image *
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full px-3 py-2 rounded border-2 focus:outline-none"
-                style={{
-                  backgroundColor: theme.background,
-                  borderColor: `${theme.primary}30`,
-                  color: theme.text,
-                }}
-                required
-              />
-              {formData.file && (
-                <p
-                  className="text-sm mt-1"
-                  style={{ color: theme.text, opacity: 0.7 }}
-                >
-                  Selected: {formData.file.name}
-                </p>
-              )}
-            </div>
-
-            <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={() => setShowAddProject(false)}
-                className="px-4 py-2 rounded-lg border-2 transition-colors duration-200"
-                style={{
-                  borderColor: theme.primary,
-                  color: theme.primary,
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isUploading}
-                className="flex items-center space-x-2 px-6 py-2 rounded-lg text-white font-semibold transition-all duration-200 disabled:opacity-50"
-                style={{ backgroundColor: theme.primary }}
-              >
-                {isUploading ? (
-                  <>
-                    <motion.div
-                      className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 1,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    />
-                    <span>Uploading...</span>
-                  </>
-                ) : (
-                  <>
-                    <Save size={20} />
-                    <span>Add Project</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
-        </motion.div>
-      )}
-
+      {/* Project Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project: Project) => (
           <motion.div
             key={project.id}
-            className="p-6 rounded-2xl shadow-lg"
-            style={{
-              backgroundColor: theme.background,
-              border: `1px solid ${theme.primary}20`,
-            }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg"
             whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
           >
             <div className="flex justify-between items-start mb-4">
-              <h3 className="font-semibold" style={{ color: theme.text }}>
-                {project.title}
-              </h3>
+              <h3 className="font-semibold">{project.title}</h3>
               <button
                 onClick={() => deleteProject(project.id)}
-                className="p-2 rounded text-red-500 hover:bg-red-50 transition-colors duration-200"
+                className="p-2 rounded text-red-400 hover:bg-red-500/20"
               >
                 <Trash2 size={16} />
               </button>
             </div>
-            <p
-              className="text-sm opacity-70 mb-2"
-              style={{ color: theme.text }}
-            >
-              {project.description}
-            </p>
+            <p className="text-sm opacity-70 mb-2">{project.description}</p>
             <div className="flex items-center justify-between">
-              <span
-                className="px-2 py-1 rounded text-xs"
-                style={{
-                  backgroundColor: `${theme.primary}20`,
-                  color: theme.text,
-                }}
-              >
+              <span className="px-2 py-1 rounded text-xs bg-white/10">
                 {project.category}
               </span>
-              <span
-                className="text-xs opacity-50"
-                style={{ color: theme.text }}
-              >
+              <span className="text-xs opacity-50">
                 {new Date(project.createdAt).toLocaleDateString()}
               </span>
             </div>
@@ -820,55 +456,50 @@ function ProjectsTab({
   );
 }
 
-// Videos Tab Component
-function VideosTab({ videos, deleteVideo, theme }: any) {
+/* -------------------- Videos Tab -------------------- */
+function VideosTab({ videos, deleteVideo }: any) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold" style={{ color: theme.text }}>
-          Videos
-        </h2>
-        <button
-          className="flex items-center space-x-2 px-4 py-2 rounded-lg text-white font-semibold"
-          style={{ backgroundColor: theme.primary }}
+        <h2 className="text-2xl font-bold">Videos</h2>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          className="flex items-center space-x-2 px-4 py-2 rounded-lg text-dark font-semibold bg-gradient-to-r from-green-500 to-teal-500"
         >
           <Plus size={20} />
           <span>Add Video</span>
-        </button>
+        </motion.button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {videos.map((video: VideoType) => (
           <motion.div
             key={video.id}
-            className="p-6 rounded-2xl shadow-lg"
-            style={{
-              backgroundColor: theme.background,
-              border: `1px solid ${theme.primary}20`,
-            }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg"
             whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
           >
             <div className="flex justify-between items-start mb-4">
-              <h3 className="font-semibold" style={{ color: theme.text }}>
-                {video.title}
-              </h3>
+              <h3 className="font-semibold">{video.title}</h3>
               <button
                 onClick={() => deleteVideo(video.id)}
-                className="p-2 rounded text-red-500 hover:bg-red-50 transition-colors duration-200"
+                className="p-2 rounded text-red-400 hover:bg-red-500/20"
               >
                 <Trash2 size={16} />
               </button>
             </div>
-            <p
-              className="text-sm opacity-70 mb-2"
-              style={{ color: theme.text }}
-            >
-              {video.description}
-            </p>
-            <span className="text-xs opacity-50" style={{ color: theme.text }}>
-              {new Date(video.createdAt).toLocaleDateString()}
-            </span>
+            <p className="text-sm opacity-70 mb-2">{video.description}</p>
+            <div className="flex items-center justify-between">
+              <span className="px-2 py-1 rounded text-xs bg-white/10">
+                {video.description}
+              </span>
+              <span className="text-xs opacity-50">
+                {new Date(video.createdAt).toLocaleDateString()}
+              </span>
+            </div>
           </motion.div>
         ))}
       </div>
@@ -876,91 +507,45 @@ function VideosTab({ videos, deleteVideo, theme }: any) {
   );
 }
 
-// Settings Tab Component
-function SettingsTab({
-  tempSettings,
-  setTempSettings,
-  theme,
-  updateSettings,
-}: any) {
+/* -------------------- Settings Tab -------------------- */
+function SettingsTab({ tempSettings, setTempSettings, updateSettings }: any) {
   return (
     <div className="space-y-6">
-      <div
-        className="p-6 rounded-2xl shadow-lg"
-        style={{
-          backgroundColor: theme.background,
-          border: `1px solid ${theme.primary}20`,
-        }}
-      >
-        <h2 className="text-2xl font-bold mb-6" style={{ color: theme.text }}>
-          Site Settings
-        </h2>
-
-        <div className="space-y-6">
+      <div className="p-6 rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg">
+        <h2 className="text-2xl font-bold mb-6">General Settings</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: theme.text }}
-            >
-              Site Title
-            </label>
+            <label className="block text-sm font-medium mb-2">Site Name</label>
             <input
               type="text"
-              value={tempSettings.siteTitle}
+              value={tempSettings.siteName}
               onChange={(e) =>
-                setTempSettings((prev: any) => ({
-                  ...prev,
-                  siteTitle: e.target.value,
-                }))
+                setTempSettings({ ...tempSettings, siteName: e.target.value })
               }
-              className="w-full px-3 py-2 rounded border-2 focus:outline-none"
-              style={{
-                backgroundColor: theme.background,
-                borderColor: `${theme.primary}30`,
-                color: theme.text,
-              }}
+              className="w-full px-3 py-2 rounded border-2 border-white/30 bg-white/5 backdrop-blur-lg"
             />
           </div>
-
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: theme.text }}
-            >
-              Site Description
-            </label>
-            <textarea
-              value={tempSettings.siteDescription}
+            <label className="block text-sm font-medium mb-2">Site URL</label>
+            <input
+              type="text"
+              value={tempSettings.siteUrl}
               onChange={(e) =>
-                setTempSettings((prev: any) => ({
-                  ...prev,
-                  siteDescription: e.target.value,
-                }))
+                setTempSettings({ ...tempSettings, siteUrl: e.target.value })
               }
-              className="w-full px-3 py-2 rounded border-2 focus:outline-none"
-              style={{
-                backgroundColor: theme.background,
-                borderColor: `${theme.primary}30`,
-                color: theme.text,
-              }}
-              rows={3}
+              className="w-full px-3 py-2 rounded border-2 border-white/30 bg-white/5 backdrop-blur-lg"
             />
           </div>
         </div>
-
         <div className="mt-6 flex justify-end">
-          <button
-            onClick={() =>
-              updateSettings({
-                siteTitle: tempSettings.siteTitle,
-                siteDescription: tempSettings.siteDescription,
-              })
-            }
-            className="flex items-center space-x-2 px-6 py-3 rounded-lg text-white font-semibold transition-all duration-200 hover:shadow-lg"
-            style={{ backgroundColor: theme.primary }}
+          <motion.button
+            onClick={() => updateSettings(tempSettings)}
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center space-x-2 px-6 py-3 rounded-lg text-dark font-semibold bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg"
           >
-            <span>Save</span>
-          </button>
+            <Save size={20} />
+            <span>Save Settings</span>
+          </motion.button>
         </div>
       </div>
     </div>

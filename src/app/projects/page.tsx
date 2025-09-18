@@ -3,7 +3,6 @@
 import { useTheme } from "@/shared/lib/theme-context";
 import { Project } from "@/shared/types";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -71,66 +70,6 @@ export default function ProjectsPage() {
       className="min-h-screen pt-24 pb-20 relative overflow-hidden"
     >
       <div className="max-w-5xl mx-auto px-4">
-        {/* Title */}
-        <motion.h1
-          className="text-4xl md:text-5xl font-bold text-center mb-12"
-          style={{ color: theme.text }}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          My Projects
-        </motion.h1>
-
-        {/* Search + Categories */}
-        <div className="flex flex-col md:flex-row gap-4 mb-16">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 opacity-50"
-              style={{ color: theme.text }}
-            />
-            <input
-              type="text"
-              placeholder="Search projects..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-lg border focus:outline-none backdrop-blur-lg shadow-sm"
-              style={{
-                backgroundColor: `${theme.background}CC`,
-                borderColor: `${theme.primary}30`,
-                color: theme.text,
-              }}
-            />
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map((c) => (
-              <button
-                key={c}
-                onClick={() => setSelectedCategory(c)}
-                className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
-                  selectedCategory === c
-                    ? "scale-105 shadow-md"
-                    : "opacity-70 hover:opacity-100"
-                }`}
-                style={{
-                  backgroundColor:
-                    selectedCategory === c
-                      ? theme.primary
-                      : `${theme.primary}15`,
-                  color: selectedCategory === c ? "white" : theme.text,
-                  border: `1px solid ${theme.primary}30`,
-                }}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Timeline */}
         <div className="relative">
           {/* Animated wave-like timeline line */}
@@ -156,26 +95,27 @@ export default function ProjectsPage() {
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.6, delay: idx * 0.1 }}
                 >
-                  {/* Connector dot */}
+                  {/* Connector dot - liquid glass */}
                   <motion.div
-                    className="absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full border-2 bg-white z-10 shadow-md"
-                    style={{ borderColor: theme.primary }}
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatType: "reverse",
+                    className="absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full
+             backdrop-blur-md bg-white/20 border border-white/40
+             shadow-sm"
+                    whileHover={{
+                      scale: 1.3,
+                      boxShadow: "0 0 15px rgba(255,255,255,0.6)",
                     }}
+                    transition={{ type: "spring", stiffness: 200, damping: 15 }}
                   />
 
                   {/* Image card with liquid glass effect */}
                   <motion.div
-                    className="w-full md:w-1/2"
-                    whileHover={{ scale: 1.03 }}
+                    className="w-full md:w-1/2 relative group"
+                    whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 200 }}
                   >
                     <div
-                      className="relative rounded-2xl overflow-hidden backdrop-blur-xl bg-white/10 shadow-xl border border-white/20"
+                      className="relative rounded-2xl overflow-hidden
+               backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg"
                       style={{ aspectRatio: "4/3" }}
                     >
                       <Image
@@ -184,23 +124,31 @@ export default function ProjectsPage() {
                         fill
                         className="object-cover"
                       />
+                      {/* light reflection overlay */}
+                      <div
+                        className="absolute inset-0 bg-gradient-to-tr from-white/30 to-transparent
+                 opacity-0 group-hover:opacity-20 transition-opacity"
+                      />
                     </div>
                   </motion.div>
 
                   {/* Content */}
                   <motion.div
-                    className="w-full md:w-1/2 space-y-3 p-4 rounded-xl backdrop-blur-lg bg-white/5 border border-white/20 shadow-md"
-                    whileHover={{ y: -4 }}
-                    transition={{ type: "spring", stiffness: 150 }}
+                    className="w-full md:w-1/2 space-y-3 p-6 rounded-xl
+             backdrop-blur-2xl bg-white/10 border border-white/30 shadow-lg
+             hover:shadow-2xl transition-all relative"
+                    whileHover={{ y: -6, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 150, damping: 15 }}
                   >
                     <h3
-                      className="text-2xl font-semibold"
+                      className="text-2xl font-semibold drop-shadow-sm"
                       style={{ color: theme.text }}
                     >
                       {project.title}
                     </h3>
                     <p
-                      className="text-sm opacity-80"
+                      className="text-sm leading-relaxed opacity-80"
                       style={{ color: theme.text }}
                     >
                       {project.description}
@@ -209,11 +157,11 @@ export default function ProjectsPage() {
                       {project.tags?.slice(0, 3).map((tag) => (
                         <span
                           key={tag}
-                          className="px-2 py-1 rounded text-xs backdrop-blur-sm shadow-sm"
-                          style={{
-                            backgroundColor: `${theme.primary}30`,
-                            color: theme.text,
-                          }}
+                          className="px-3 py-1 rounded-full text-xs
+                   backdrop-blur-sm border border-white/20
+                   bg-gradient-to-r from-pink-400/30 to-purple-400/30
+                   shadow-sm"
+                          style={{ color: theme.text }}
                         >
                           {tag}
                         </span>

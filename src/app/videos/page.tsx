@@ -180,7 +180,7 @@ export default function VideosPage() {
                     width="100%"
                     height="100%"
                     src={`https://www.youtube.com/embed/${extractVideoId(
-                      selectedVideo.youtubeUrl
+                      selectedVideo.youtubeUrl || ""
                     )}`}
                     title={selectedVideo.title}
                     frameBorder="0"

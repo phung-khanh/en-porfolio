@@ -1,5 +1,6 @@
 import connectDB from "@/shared/configs/db";
 import Project from "@/shared/schema/project";
+import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -45,11 +46,11 @@ export async function PUT(
 
     // Return normalized data like the GET /api/projects endpoint
     const normalized = {
-      id: project._id.toString(),
-      title: project.title,
-      description: project.description,
-      image: project.image,
-      category: project.category,
+      id: project._id ? (project._id as Types.ObjectId).toString() : null,
+      title: project.title ?? null,
+      description: project.description ?? null,
+      image: project.image ?? null,
+      category: project.category ?? null,
       tags: project.tags ?? [],
       featured: project.featured ?? false,
       createdAt: project.createdAt,

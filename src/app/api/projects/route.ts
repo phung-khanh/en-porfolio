@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
       await project.save();
 
       const normalized = {
-        id: project._id.toString(),
+        id: (project._id as Types.ObjectId).toString(),
         title: project.title,
         description: project.description,
         image: project.image,
@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
       await project.save();
 
       const normalized = {
-        id: project._id.toString(),
+        id: (project._id as Types.ObjectId).toString(),
         title: project.title,
         description: project.description,
         image: project.image,

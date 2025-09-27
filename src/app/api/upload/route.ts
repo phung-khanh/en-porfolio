@@ -6,6 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
+    const folder = (formData.get("folder") as string) || "portfolio";
 
     if (!file) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
         .upload_stream(
           {
             resource_type: "auto",
-            folder: "portfolio/projects",
+            folder: `portfolio/${folder}`,
           },
           (error, result) => {
             if (error) reject(error);

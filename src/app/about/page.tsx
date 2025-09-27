@@ -1,21 +1,17 @@
 "use client";
 
 import avatarImg from "@/shared/assets/avatar.jpeg";
-import { useTheme } from "@/shared/lib/theme-context";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function AboutPage() {
-  const { theme } = useTheme();
-
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
           <motion.h1
-            className="text-4xl md:text-6xl font-light mb-8 tracking-tight"
-            style={{ color: theme.text }}
+            className="text-4xl md:text-6xl font-light mb-8 tracking-tight text-gray-900"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -36,30 +32,21 @@ export default function AboutPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <div className="space-y-6">
-                <p
-                  className="text-lg font-light leading-relaxed"
-                  style={{ color: theme.secondary }}
-                >
+                <p className="text-lg font-light leading-relaxed text-gray-600">
                   I'm a creative designer passionate about crafting visual
                   experiences that tell compelling stories. With a focus on
                   minimalism and functionality, I help brands communicate their
                   essence through thoughtful design.
                 </p>
 
-                <p
-                  className="text-lg font-light leading-relaxed"
-                  style={{ color: theme.secondary }}
-                >
+                <p className="text-lg font-light leading-relaxed text-gray-600">
                   Based in Vietnam, I work with clients worldwide to create
                   memorable visual identities and digital experiences. My
                   approach combines strategic thinking with creative execution
                   to deliver solutions that are both beautiful and effective.
                 </p>
 
-                <p
-                  className="text-lg font-light leading-relaxed"
-                  style={{ color: theme.secondary }}
-                >
+                <p className="text-lg font-light leading-relaxed text-gray-600">
                   When I'm not designing, you can find me exploring new places,
                   capturing moments through photography, or experimenting with
                   different creative mediums.
@@ -73,50 +60,29 @@ export default function AboutPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                <h3
-                  className="text-sm font-medium tracking-wide uppercase mb-6"
-                  style={{ color: theme.text }}
-                >
+                <h3 className="text-sm font-medium tracking-wide uppercase mb-6 text-gray-900">
                   Skills
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <p
-                      className="text-sm font-light"
-                      style={{ color: theme.secondary }}
-                    >
+                    <p className="text-sm font-light text-gray-600">
                       Brand Identity
                     </p>
-                    <p
-                      className="text-sm font-light"
-                      style={{ color: theme.secondary }}
-                    >
+                    <p className="text-sm font-light text-gray-600">
                       Visual Design
                     </p>
-                    <p
-                      className="text-sm font-light"
-                      style={{ color: theme.secondary }}
-                    >
+                    <p className="text-sm font-light text-gray-600">
                       UI/UX Design
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <p
-                      className="text-sm font-light"
-                      style={{ color: theme.secondary }}
-                    >
+                    <p className="text-sm font-light text-gray-600">
                       Art Direction
                     </p>
-                    <p
-                      className="text-sm font-light"
-                      style={{ color: theme.secondary }}
-                    >
+                    <p className="text-sm font-light text-gray-600">
                       Photography
                     </p>
-                    <p
-                      className="text-sm font-light"
-                      style={{ color: theme.secondary }}
-                    >
+                    <p className="text-sm font-light text-gray-600">
                       Creative Strategy
                     </p>
                   </div>
@@ -149,8 +115,7 @@ export default function AboutPage() {
       <section className="py-24 px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center">
           <motion.h2
-            className="text-2xl font-light mb-8 tracking-wide"
-            style={{ color: theme.text }}
+            className="text-2xl font-light mb-8 tracking-wide text-gray-900"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -159,8 +124,7 @@ export default function AboutPage() {
             Let's work together
           </motion.h2>
           <motion.p
-            className="text-lg font-light mb-8 max-w-2xl mx-auto"
-            style={{ color: theme.secondary }}
+            className="text-lg font-light mb-8 max-w-2xl mx-auto text-gray-600"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -170,8 +134,7 @@ export default function AboutPage() {
           </motion.p>
           <motion.a
             href="/contact"
-            className="inline-block text-sm font-medium tracking-wide uppercase border-b border-black hover:opacity-60 transition-opacity duration-300"
-            style={{ color: theme.text }}
+            className="inline-block text-sm font-medium tracking-wide uppercase border-b border-black hover:opacity-60 transition-opacity duration-300 text-gray-900"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}

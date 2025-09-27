@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useTheme } from "@/shared/lib/theme-context";
 import { Video } from "@/shared/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { Calendar, ExternalLink, Play, X } from "lucide-react";
@@ -10,7 +9,7 @@ import { useEffect, useState } from "react";
 export default function VideosPage() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
-  const { theme } = useTheme();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchVideos();
@@ -18,13 +17,18 @@ export default function VideosPage() {
 
   const fetchVideos = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch("/api/videos");
       if (response.ok) {
         const videosData = await response.json();
         setVideos(videosData);
+      } else {
+        console.error("Failed to fetch videos:", response.status);
       }
     } catch (error) {
       console.error("Error fetching videos:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,16 +49,10 @@ export default function VideosPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1
-            className="text-5xl md:text-6xl font-bold mb-4"
-            style={{ color: theme.text }}
-          >
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-gray-900">
             Video Content
           </h1>
-          <p
-            className="text-lg md:text-xl opacity-80 max-w-2xl mx-auto"
-            style={{ color: theme.text }}
-          >
+          <p className="text-lg md:text-xl opacity-80 max-w-2xl mx-auto text-gray-900">
             Watch my design process, tutorials, and creative insights
           </p>
         </motion.div>
@@ -63,90 +61,74 @@ export default function VideosPage() {
       {/* Videos Grid */}
       <section className="pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {videos.map((video, index) => (
-              <motion.div
-                key={video.id}
-                className="group cursor-pointer"
-                initial={{ opacity: 0, y: 40, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                onClick={() => setSelectedVideo(video)}
-              >
-                <div className="relative rounded-2xl overflow-hidden backdrop-blur-lg bg-white/10 border border-white/20 shadow-lg hover:shadow-2xl transition-all duration-300">
-                  {/* Thumbnail */}
-                  <div className="relative h-60 overflow-hidden">
-                    <img
-                      src={video.thumbnail}
-                      alt={video.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-
-                    {/* Play overlay */}
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-all duration-300">
-                      <motion.div
-                        className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg"
-                        style={{ backgroundColor: theme.primary }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Play size={26} className="text-white ml-1" />
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  {/* Info */}
-                  <div className="p-6">
-                    <h3
-                      className="text-xl font-bold mb-2 group-hover:opacity-80 transition-opacity"
-                      style={{ color: theme.text }}
-                    >
-                      {video.title}
-                    </h3>
-                    <p
-                      className="text-sm opacity-70 mb-4 line-clamp-2"
-                      style={{ color: theme.text }}
-                    >
-                      {video.description}
-                    </p>
-                    <div className="flex items-center space-x-2 text-xs opacity-60">
-                      <Calendar size={14} style={{ color: theme.text }} />
-                      <span style={{ color: theme.text }}>
-                        {new Date(video.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Empty state */}
-          {videos.length === 0 && (
-            <motion.div
-              className="text-center py-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div
-                className="text-6xl mb-4 opacity-50"
-                style={{ color: theme.primary }}
-              >
-                🎥
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-500">Loading videos...</p>
               </div>
-              <h3
-                className="text-2xl font-bold mb-2"
-                style={{ color: theme.text }}
-              >
-                No videos available
-              </h3>
-              <p className="opacity-70" style={{ color: theme.text }}>
-                Check back soon for new content
+            </div>
+          ) : videos.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-500 text-lg mb-4">No videos found</p>
+              <p className="text-gray-400">
+                Videos will appear here once they are added through the admin
+                panel.
               </p>
-            </motion.div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {videos.map((video, index) => (
+                <motion.div
+                  key={video.id}
+                  className="group cursor-pointer"
+                  initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  onClick={() => setSelectedVideo(video)}
+                >
+                  <div className="relative rounded-2xl overflow-hidden backdrop-blur-lg bg-white/10 border border-white/20 shadow-lg hover:shadow-2xl transition-all duration-300">
+                    {/* Thumbnail */}
+                    <div className="relative h-60 overflow-hidden">
+                      <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+
+                      {/* Play overlay */}
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-all duration-300">
+                        <motion.div
+                          className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg bg-gray-800"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Play size={26} className="text-white ml-1" />
+                        </motion.div>
+                      </div>
+                    </div>
+
+                    {/* Info */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-2 group-hover:opacity-80 transition-opacity text-gray-900">
+                        {video.title}
+                      </h3>
+                      <p className="text-sm opacity-70 mb-4 line-clamp-2 text-gray-900">
+                        {video.description}
+                      </p>
+                      <div className="flex items-center space-x-2 text-xs opacity-60">
+                        <Calendar size={14} className="text-gray-900" />
+                        <span className="text-gray-900">
+                          {new Date(video.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           )}
         </div>
       </section>
@@ -180,17 +162,14 @@ export default function VideosPage() {
             >
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-white/20">
-                <h3
-                  className="text-2xl font-bold"
-                  style={{ color: theme.text }}
-                >
+                <h3 className="text-2xl font-bold text-gray-900">
                   {selectedVideo.title}
                 </h3>
                 <button
                   onClick={() => setSelectedVideo(null)}
                   className="p-2 rounded-full hover:bg-white/10 transition"
                 >
-                  <X size={20} style={{ color: theme.text }} />
+                  <X size={20} className="text-gray-900" />
                 </button>
               </div>
 
@@ -210,14 +189,14 @@ export default function VideosPage() {
                     className="w-full h-full"
                   />
                 </div>
-                <p className="text-sm opacity-80" style={{ color: theme.text }}>
+                <p className="text-sm opacity-80 text-gray-900">
                   {selectedVideo.description}
                 </p>
 
                 <div className="mt-4 flex items-center justify-between">
                   <div className="flex items-center space-x-2 text-xs opacity-70">
-                    <Calendar size={14} style={{ color: theme.text }} />
-                    <span style={{ color: theme.text }}>
+                    <Calendar size={14} className="text-gray-900" />
+                    <span className="text-gray-900">
                       {new Date(selectedVideo.createdAt).toLocaleDateString()}
                     </span>
                   </div>
@@ -226,8 +205,7 @@ export default function VideosPage() {
                     href={selectedVideo.youtubeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium hover:shadow-lg transition-all"
-                    style={{ backgroundColor: theme.primary }}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium hover:shadow-lg transition-all bg-gray-800"
                   >
                     <span>Watch on YouTube</span>
                     <ExternalLink size={16} />

@@ -20,16 +20,6 @@ export interface Video {
   createdAt: Date;
 }
 
-export interface Theme {
-  primary: string;
-  secondary: string;
-  accent: string;
-  background: string;
-  text: string;
-  header: string;
-  footer: string;
-}
-
 export interface ContactForm {
   name: string;
   email: string;
@@ -38,9 +28,10 @@ export interface ContactForm {
 }
 
 export interface AdminSettings {
-  theme: Theme;
   siteTitle: string;
   siteDescription: string;
+  headerText: string;
+  footerText: string;
   socialLinks: {
     instagram?: string;
     dribbble?: string;

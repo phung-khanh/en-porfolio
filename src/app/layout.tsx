@@ -1,7 +1,6 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { AuthProvider } from "@/shared/lib/auth-context";
-import { ThemeProvider } from "@/shared/lib/theme-context";
 import "@/shared/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
@@ -31,13 +30,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
       <body className="font-sans antialiased">
         <AuthProvider>
-          <ThemeProvider>
-            <div className="min-h-screen flex flex-col">
-              <Header />
-              <main className="flex-1 pt-14">{children}</main>
-              <Footer />
-            </div>
-          </ThemeProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1 pt-14">{children}</main>
+            <Footer />
+          </div>
         </AuthProvider>
       </body>
     </html>

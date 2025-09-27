@@ -1,17 +1,13 @@
 "use client";
 
-import { useTheme } from "@/shared/lib/theme-context";
 import { motion } from "framer-motion";
 
 export default function Loading() {
-  const { theme } = useTheme();
-
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <motion.div
-          className="w-16 h-16 rounded-full mx-auto mb-4"
-          style={{ backgroundColor: theme.primary }}
+          className="w-16 h-16 rounded-full mx-auto mb-4 bg-gray-800"
           animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 180, 360],
@@ -23,8 +19,7 @@ export default function Loading() {
           }}
         />
         <motion.p
-          className="text-lg font-medium"
-          style={{ color: theme.text }}
+          className="text-lg font-medium text-gray-900"
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{
             duration: 1.5,

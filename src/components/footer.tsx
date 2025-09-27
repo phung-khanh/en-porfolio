@@ -1,10 +1,9 @@
 "use client";
 
-import { useTheme } from "@/shared/lib/theme-context";
 import { motion } from "framer-motion";
 
 export default function Footer() {
-  const { theme, settings } = useTheme();
+  const siteTitle = "Portfolio";
 
   return (
     <motion.footer
@@ -17,26 +16,31 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Left */}
-          <p className="text-sm font-light" style={{ color: theme.secondary }}>
-            © {new Date().getFullYear()} {settings.siteTitle}. All rights
-            reserved.
+          <p className="text-sm font-light text-gray-600">
+            © {new Date().getFullYear()} {siteTitle}. All rights reserved.
           </p>
 
           {/* Right */}
           <div className="flex items-center gap-6">
             <a
               href="mailto:hello@honganh.com"
-              className="text-sm font-light hover:opacity-60 transition-opacity duration-300"
-              style={{ color: theme.text }}
+              className="text-sm font-light hover:opacity-60 transition-opacity duration-300 text-gray-900"
             >
-              hello@honganh.com
+              lethihonganh.danang@gmail.com
             </a>
             <a
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-light hover:opacity-60 transition-opacity duration-300"
-              style={{ color: theme.text }}
+              className="text-sm font-light hover:opacity-60 transition-opacity duration-300 text-gray-900"
+            >
+              Facebook
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-light hover:opacity-60 transition-opacity duration-300 text-gray-900"
             >
               Instagram
             </a>
@@ -44,8 +48,7 @@ export default function Footer() {
               href="https://dribbble.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-light hover:opacity-60 transition-opacity duration-300"
-              style={{ color: theme.text }}
+              className="text-sm font-light hover:opacity-60 transition-opacity duration-300 text-gray-900"
             >
               Dribbble
             </a>

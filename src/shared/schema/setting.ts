@@ -22,6 +22,8 @@ export interface ISocialLinks {
 export interface ISettings extends Document {
   siteTitle: string;
   siteDescription: string;
+  headerText: string;
+  footerText: string;
   theme: ITheme;
   socialLinks: ISocialLinks;
   updatedAt: Date;
@@ -33,7 +35,7 @@ const ThemeSchema = new Schema<ITheme>(
     secondary: { type: String, default: "#d946ef" },
     accent: { type: String, default: "#f97316" },
     background: { type: String, default: "#ffffff" },
-    text: { type: String, default: "#1f2937" },
+    text: { type: String, default: "#000000" },
     header: { type: String, default: "#ffffff" },
     footer: { type: String, default: "#1f2937" },
   },
@@ -61,6 +63,14 @@ const SettingsSchema = new Schema<ISettings>(
     siteDescription: {
       type: String,
       default: "Creative designs that inspire and engage",
+    },
+    headerText: {
+      type: String,
+      default: "Welcome to My Portfolio",
+    },
+    footerText: {
+      type: String,
+      default: "© 2024 My Portfolio. All rights reserved.",
     },
     theme: {
       type: ThemeSchema,

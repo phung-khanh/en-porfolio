@@ -6,6 +6,7 @@ export interface IProject extends Document {
   image: string;
   category: string;
   tags: string[];
+  featured?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,11 +36,19 @@ const ProjectSchema = new Schema<IProject>(
         trim: true,
       },
     ],
+    featured: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.models.Project ||
-  mongoose.model<IProject>("Project", ProjectSchema);
+// Clear existing model to force reload with new schema
+if (mongoose.models.Project) {
+  delete mongoose.models.Project;
+}
+
+export default mongoose.model<IProject>("Project", ProjectSchema);

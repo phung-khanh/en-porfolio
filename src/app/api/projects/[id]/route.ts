@@ -43,7 +43,20 @@ export async function PUT(
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    return NextResponse.json(project);
+    // Return normalized data like the GET /api/projects endpoint
+    const normalized = {
+      id: project._id.toString(),
+      title: project.title,
+      description: project.description,
+      image: project.image,
+      category: project.category,
+      tags: project.tags ?? [],
+      featured: project.featured ?? false,
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt,
+    };
+
+    return NextResponse.json(normalized);
   } catch (error) {
     console.error("Error updating project:", error);
     return NextResponse.json(

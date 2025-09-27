@@ -2,7 +2,6 @@
 "use client";
 
 import { useAuth } from "@/shared/lib/auth-context";
-import { useTheme } from "@/shared/lib/theme-context";
 import { motion } from "framer-motion";
 import { ArrowRight, Eye, EyeOff, Lock, User } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -16,7 +15,6 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   const { login } = useAuth();
-  const { theme } = useTheme();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,18 +50,12 @@ export default function LoginPage() {
             transition={{ delay: 0.2, duration: 0.6 }}
           >
             <div className="w-16 h-16 border border-gray-200 mx-auto mb-6 flex items-center justify-center">
-              <Lock className="w-8 h-8" style={{ color: theme.text }} />
+              <Lock className="w-8 h-8 text-gray-900" />
             </div>
-            <h1
-              className="text-3xl font-light tracking-wide mb-2"
-              style={{ color: theme.text }}
-            >
+            <h1 className="text-3xl font-light tracking-wide mb-2 text-gray-900">
               Admin Login
             </h1>
-            <p
-              className="text-sm font-light"
-              style={{ color: theme.secondary }}
-            >
+            <p className="text-sm font-light text-gray-600">
               Access your portfolio dashboard
             </p>
           </motion.div>
@@ -74,23 +66,16 @@ export default function LoginPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <label
-                className="block text-sm font-medium tracking-wide uppercase mb-3"
-                style={{ color: theme.text }}
-              >
+              <label className="block text-sm font-medium tracking-wide uppercase mb-3 text-gray-900">
                 Username or Email
               </label>
               <div className="relative">
-                <User
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 w-5 h-5"
-                  style={{ color: theme.secondary }}
-                />
+                <User className="absolute left-0 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-600" />
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-8 pr-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent"
-                  style={{ color: theme.text }}
+                  className="w-full pl-8 pr-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent text-gray-900"
                   placeholder="Enter your username or email"
                   required
                 />
@@ -102,31 +87,23 @@ export default function LoginPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <label
-                className="block text-sm font-medium tracking-wide uppercase mb-3"
-                style={{ color: theme.text }}
-              >
+              <label className="block text-sm font-medium tracking-wide uppercase mb-3 text-gray-900">
                 Password
               </label>
               <div className="relative">
-                <Lock
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 w-5 h-5"
-                  style={{ color: theme.secondary }}
-                />
+                <Lock className="absolute left-0 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-600" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-8 pr-12 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent"
-                  style={{ color: theme.text }}
+                  className="w-full pl-8 pr-12 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent text-gray-900"
                   placeholder="Enter your password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 hover:opacity-60 transition-opacity duration-300"
-                  style={{ color: theme.secondary }}
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 hover:opacity-60 transition-opacity duration-300 text-gray-600"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -179,8 +156,7 @@ export default function LoginPage() {
           >
             <a
               href="/"
-              className="text-sm font-light tracking-wide uppercase hover:opacity-60 transition-opacity duration-300"
-              style={{ color: theme.text }}
+              className="text-sm font-light tracking-wide uppercase hover:opacity-60 transition-opacity duration-300 text-gray-900"
             >
               ← Back to Portfolio
             </a>

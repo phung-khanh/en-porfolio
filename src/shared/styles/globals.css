@@ -1,5 +1,45 @@
 @import "tailwindcss";
 
+/* Fixed color scheme - no more theme variables */
+
+/* Form elements with fixed colors */
+.form-input {
+  @apply w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none transition-colors duration-300 bg-transparent;
+  color: #1f2937;
+  border-bottom-color: #e5e7eb;
+}
+
+.form-input:focus {
+  border-bottom-color: #3b82f6;
+}
+
+.form-label {
+  @apply block text-sm font-medium tracking-wide uppercase mb-2;
+  color: #1f2937;
+}
+
+.form-textarea {
+  @apply w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none transition-colors duration-300 bg-transparent resize-none;
+  color: #1f2937;
+  border-bottom-color: #e5e7eb;
+}
+
+.form-textarea:focus {
+  border-bottom-color: #3b82f6;
+}
+
+.form-submit {
+  @apply w-full flex items-center justify-center space-x-2 px-6 py-4 font-medium tracking-wide uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: 1px solid #3b82f6;
+}
+
+.form-submit:hover {
+  background-color: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
 /* Minimalist design utilities */
 .hover-lift {
   transition: transform 300ms ease, box-shadow 300ms ease;

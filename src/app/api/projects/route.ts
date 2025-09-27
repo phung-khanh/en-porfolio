@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-require-imports */
+
 import cloudinary from "@/shared/configs/cloudinary";
 import connectDB from "@/shared/configs/db";
 import Project from "@/shared/schema/project";
@@ -14,14 +14,24 @@ type RawProject = {
   image: string;
   category: string;
   tags?: string[];
+  featured?: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     await connectDB();
-    const projects = await Project.find()
+
+    const { searchParams } = new URL(request.url);
+    const featured = searchParams.get("featured");
+
+    let query = {};
+    if (featured === "true") {
+      query = { featured: true };
+    }
+
+    const projects = await Project.find(query)
       .sort({ createdAt: -1 })
       .lean<RawProject[]>();
 
@@ -32,6 +42,7 @@ export async function GET() {
       image: p.image,
       category: p.category,
       tags: p.tags ?? [],
+      featured: p.featured ?? false,
       createdAt: p.createdAt,
       updatedAt: p.updatedAt,
     }));
@@ -61,39 +72,51 @@ export async function POST(request: NextRequest) {
       const description = formData.get("description") as string;
       const category = formData.get("category") as string;
       const tags = formData.get("tags") as string;
+      const featured = formData.get("featured") as string;
       const file = formData.get("file") as File;
 
-      if (!title || !description || !category || !file) {
+      if (!title || !description || !category) {
         return NextResponse.json(
-          { error: "Missing required fields" },
+          { error: "Missing required fields: title, description, category" },
           { status: 400 }
         );
       }
 
-      // Upload image to Cloudinary
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const uploadResult = await new Promise((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream(
-            {
-              resource_type: "auto",
-              folder: "portfolio",
-            },
-            (error: any, result: any) => {
-              if (error) reject(error);
-              else resolve(result);
-            }
-          )
-          .end(buffer);
-      });
+      let imageUrl = "";
+
+      if (file) {
+        // Upload image to Cloudinary
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const uploadResult = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                resource_type: "auto",
+                folder: "portfolio/projects",
+              },
+              (error: any, result: any) => {
+                if (error) reject(error);
+                else resolve(result);
+              }
+            )
+            .end(buffer);
+        });
+        imageUrl = (uploadResult as any).secure_url;
+      } else {
+        return NextResponse.json(
+          { error: "Image file is required" },
+          { status: 400 }
+        );
+      }
 
       const projectData = {
         title,
         description,
         category,
         tags: tags ? tags.split(",").map((tag: string) => tag.trim()) : [],
-        image: (uploadResult as any).secure_url,
+        image: imageUrl,
+        featured: featured === "true",
       };
 
       const project = new Project(projectData);
@@ -106,6 +129,7 @@ export async function POST(request: NextRequest) {
         image: project.image,
         category: project.category,
         tags: project.tags ?? [],
+        featured: project.featured ?? false,
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
       };
@@ -115,7 +139,26 @@ export async function POST(request: NextRequest) {
       // Handle JSON data (for direct image URL)
       const data = await request.json();
 
-      const project = new Project(data);
+      if (!data.title || !data.description || !data.category || !data.image) {
+        return NextResponse.json(
+          {
+            error:
+              "Missing required fields: title, description, category, image",
+          },
+          { status: 400 }
+        );
+      }
+
+      const projectData = {
+        title: data.title,
+        description: data.description,
+        category: data.category,
+        tags: data.tags || [],
+        image: data.image,
+        featured: data.featured || false,
+      };
+
+      const project = new Project(projectData);
       await project.save();
 
       const normalized = {
@@ -125,6 +168,7 @@ export async function POST(request: NextRequest) {
         image: project.image,
         category: project.category,
         tags: project.tags ?? [],
+        featured: project.featured ?? false,
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
       };

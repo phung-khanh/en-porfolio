@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "@/shared/lib/theme-context";
 import { ContactForm } from "@/shared/types";
 import { motion } from "framer-motion";
 import { CheckCircle, Mail, MapPin, Phone, Send } from "lucide-react";
@@ -15,7 +14,6 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { theme } = useTheme();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -76,8 +74,7 @@ export default function ContactPage() {
       <section className="pt-32 pb-16 px-6">
         <div className="max-w-4xl mx-auto">
           <motion.h1
-            className="text-4xl md:text-6xl font-light mb-8 tracking-tight"
-            style={{ color: theme.text }}
+            className="text-4xl md:text-6xl font-light mb-8 tracking-tight text-gray-900"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -85,14 +82,13 @@ export default function ContactPage() {
             Contact
           </motion.h1>
           <motion.p
-            className="text-lg font-light max-w-2xl"
-            style={{ color: theme.secondary }}
+            className="text-lg font-light max-w-2xl text-gray-600"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Ready to start your next project? Let's create something amazing
-            together.
+            Ready to start your next project? Let&apos;s create something
+            amazing together.
           </motion.p>
         </div>
       </section>
@@ -109,20 +105,14 @@ export default function ContactPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <div>
-                <h2
-                  className="text-2xl font-light mb-6 tracking-wide"
-                  style={{ color: theme.text }}
-                >
-                  Let's Connect
+                <h2 className="text-2xl font-light mb-6 tracking-wide text-gray-900">
+                  Let&apos;s Connect
                 </h2>
-                <p
-                  className="text-lg font-light leading-relaxed mb-8"
-                  style={{ color: theme.secondary }}
-                >
-                  I'm always excited to work on new projects and collaborate
-                  with creative minds. Whether you have a specific project in
-                  mind or just want to chat about design, I'd love to hear from
-                  you.
+                <p className="text-lg font-light leading-relaxed mb-8 text-gray-600">
+                  I&apos;m always excited to work on new projects and
+                  collaborate with creative minds. Whether you have a specific
+                  project in mind or just want to chat about design, I&apos;d
+                  love to hear from you.
                 </p>
               </div>
 
@@ -138,25 +128,16 @@ export default function ContactPage() {
                       transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                     >
                       <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
-                        <Icon size={20} style={{ color: theme.text }} />
+                        <Icon size={20} className="text-gray-900" />
                       </div>
                       <div>
-                        <h3
-                          className="text-sm font-medium tracking-wide uppercase mb-1"
-                          style={{ color: theme.text }}
-                        >
+                        <h3 className="text-sm font-medium tracking-wide uppercase mb-1 text-gray-900">
                           {info.title}
                         </h3>
-                        <p
-                          className="font-light mb-1"
-                          style={{ color: theme.text }}
-                        >
+                        <p className="font-light mb-1 text-gray-900">
                           {info.value}
                         </p>
-                        <p
-                          className="text-sm font-light"
-                          style={{ color: theme.secondary }}
-                        >
+                        <p className="text-sm font-light text-gray-600">
                           {info.description}
                         </p>
                       </div>
@@ -173,10 +154,7 @@ export default function ContactPage() {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <div className="bg-white border border-gray-200 p-8">
-                <h3
-                  className="text-lg font-light mb-8 tracking-wide"
-                  style={{ color: theme.text }}
-                >
+                <h3 className="text-lg font-light mb-8 tracking-wide text-gray-900">
                   Send a Message
                 </h3>
 
@@ -189,20 +167,14 @@ export default function ContactPage() {
                   >
                     <CheckCircle
                       size={48}
-                      className="mx-auto mb-4"
-                      style={{ color: theme.text }}
+                      className="mx-auto mb-4 text-gray-900"
                     />
-                    <h4
-                      className="text-lg font-light mb-2"
-                      style={{ color: theme.text }}
-                    >
+                    <h4 className="text-lg font-light mb-2 text-gray-900">
                       Message Sent!
                     </h4>
-                    <p
-                      className="font-light"
-                      style={{ color: theme.secondary }}
-                    >
-                      Thank you for reaching out. I'll get back to you soon.
+                    <p className="font-light text-gray-600">
+                      Thank you for reaching out. I&apos;ll get back to you
+                      soon.
                     </p>
                   </motion.div>
                 ) : (
@@ -211,8 +183,7 @@ export default function ContactPage() {
                       <div>
                         <label
                           htmlFor="name"
-                          className="block text-sm font-medium tracking-wide uppercase mb-2"
-                          style={{ color: theme.text }}
+                          className="block text-sm font-medium tracking-wide uppercase mb-2 text-gray-900"
                         >
                           Name *
                         </label>
@@ -223,16 +194,14 @@ export default function ContactPage() {
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent"
-                          style={{ color: theme.text }}
+                          className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors duration-300 bg-transparent text-gray-900 placeholder-gray-400"
                           placeholder="Your name"
                         />
                       </div>
                       <div>
                         <label
                           htmlFor="email"
-                          className="block text-sm font-medium tracking-wide uppercase mb-2"
-                          style={{ color: theme.text }}
+                          className="block text-sm font-medium tracking-wide uppercase mb-2 text-gray-900"
                         >
                           Email *
                         </label>
@@ -243,8 +212,7 @@ export default function ContactPage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent"
-                          style={{ color: theme.text }}
+                          className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors duration-300 bg-transparent text-gray-900 placeholder-gray-400"
                           placeholder="your@email.com"
                         />
                       </div>
@@ -253,8 +221,7 @@ export default function ContactPage() {
                     <div>
                       <label
                         htmlFor="subject"
-                        className="block text-sm font-medium tracking-wide uppercase mb-2"
-                        style={{ color: theme.text }}
+                        className="block text-sm font-medium tracking-wide uppercase mb-2 text-gray-900"
                       >
                         Subject *
                       </label>
@@ -265,8 +232,7 @@ export default function ContactPage() {
                         value={formData.subject}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent"
-                        style={{ color: theme.text }}
+                        className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors duration-300 bg-transparent text-gray-900 placeholder-gray-400"
                         placeholder="What's this about?"
                       />
                     </div>
@@ -274,8 +240,7 @@ export default function ContactPage() {
                     <div>
                       <label
                         htmlFor="message"
-                        className="block text-sm font-medium tracking-wide uppercase mb-2"
-                        style={{ color: theme.text }}
+                        className="block text-sm font-medium tracking-wide uppercase mb-2 text-gray-900"
                       >
                         Message *
                       </label>
@@ -286,8 +251,7 @@ export default function ContactPage() {
                         onChange={handleInputChange}
                         required
                         rows={6}
-                        className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent resize-none"
-                        style={{ color: theme.text }}
+                        className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors duration-300 bg-transparent resize-none text-gray-900 placeholder-gray-400"
                         placeholder="Tell me about your project..."
                       />
                     </div>
@@ -295,7 +259,7 @@ export default function ContactPage() {
                     <motion.button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 border border-black text-black font-medium tracking-wide uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-black hover:text-white"
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 border border-gray-900 text-gray-900 font-medium tracking-wide uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-900 hover:text-white"
                       whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                       whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                     >

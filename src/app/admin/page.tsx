@@ -11,7 +11,7 @@ import {
   BarChart3,
   Database,
   Edit,
-  Image,
+  Image as ImageIcon,
   LogOut,
   Plus,
   Save,
@@ -22,6 +22,7 @@ import {
   Video,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function AdminPage() {
@@ -252,7 +253,7 @@ function AdminDashboard() {
   /* -------------------- Tabs -------------------- */
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
-    { id: "projects", label: "Projects", icon: Image },
+    { id: "projects", label: "Projects", icon: ImageIcon },
     { id: "videos", label: "Videos", icon: Video },
     { id: "settings", label: "Settings", icon: Settings },
   ];
@@ -390,7 +391,7 @@ function DashboardTab({ projects, videos }: any) {
     {
       label: "Total Projects",
       value: projects.length,
-      icon: Image,
+      icon: ImageIcon,
       color: "from-blue-500 to-cyan-500",
     },
     {
@@ -729,9 +730,11 @@ function ProjectsTab({
                 {/* Image Preview */}
                 {imagePreview && (
                   <div className="relative">
-                    <img
+                    <Image
                       src={imagePreview}
                       alt="Preview"
+                      width={400}
+                      height={192}
                       className="w-full h-48 object-cover rounded-lg border border-gray-200"
                     />
                     <button
@@ -1104,9 +1107,11 @@ function VideosTab({
                 {/* Thumbnail Preview */}
                 {thumbnailPreview && (
                   <div className="relative">
-                    <img
+                    <Image
                       src={thumbnailPreview}
                       alt="Thumbnail Preview"
+                      width={400}
+                      height={192}
                       className="w-full h-48 object-cover rounded-lg border border-gray-200"
                     />
                     <button
@@ -1266,9 +1271,11 @@ function SettingsTab({
               className="flex items-center justify-between p-4 rounded-lg bg-gray-50 border border-gray-200"
             >
               <div className="flex items-center space-x-3">
-                <img
+                <Image
                   src={project.image}
                   alt={project.title}
+                  width={48}
+                  height={48}
                   className="w-12 h-12 rounded-lg object-cover"
                 />
                 <div>

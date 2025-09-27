@@ -2,6 +2,7 @@
 
 import { Project } from "@/shared/types";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function SelectedWorks() {
@@ -71,9 +72,11 @@ export default function SelectedWorks() {
         >
           <div className="aspect-square bg-gray-100 rounded-sm mb-4 overflow-hidden">
             {project.image ? (
-              <img
+              <Image
                 src={project.image}
                 alt={project.title}
+                width={400}
+                height={400}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
             ) : (

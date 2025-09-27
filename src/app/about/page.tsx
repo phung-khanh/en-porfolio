@@ -33,7 +33,7 @@ export default function AboutPage() {
             >
               <div className="space-y-6">
                 <p className="text-lg font-light leading-relaxed text-gray-600">
-                  I'm a creative designer passionate about crafting visual
+                  I&apos;m a creative designer passionate about crafting visual
                   experiences that tell compelling stories. With a focus on
                   minimalism and functionality, I help brands communicate their
                   essence through thoughtful design.
@@ -47,9 +47,9 @@ export default function AboutPage() {
                 </p>
 
                 <p className="text-lg font-light leading-relaxed text-gray-600">
-                  When I'm not designing, you can find me exploring new places,
-                  capturing moments through photography, or experimenting with
-                  different creative mediums.
+                  When I&apos;m not designing, you can find me exploring new
+                  places, capturing moments through photography, or
+                  experimenting with different creative mediums.
                 </p>
               </div>
 
@@ -121,7 +121,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            Let's work together
+            Let&apos;s work together
           </motion.h2>
           <motion.p
             className="text-lg font-light mb-8 max-w-2xl mx-auto text-gray-600"
@@ -130,7 +130,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Have a project in mind? I'd love to hear about it.
+            Have a project in mind? I&apos;d love to hear about it.
           </motion.p>
           <motion.a
             href="/contact"

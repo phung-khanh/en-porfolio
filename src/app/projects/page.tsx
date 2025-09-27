@@ -3,6 +3,7 @@
 
 import { Project } from "@/shared/types";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function ProjectsPage() {
@@ -32,64 +33,6 @@ export default function ProjectsPage() {
     }
   };
 
-  // Mock projects for demonstration
-  const mockProjects = [
-    {
-      id: "1",
-      title: "Brand Identity",
-      description: "Complete brand identity design for a modern tech startup",
-      image: "/api/placeholder/400/300",
-      category: "Branding",
-      tags: ["Branding", "Logo", "Identity"],
-      createdAt: "2024-01-15",
-    },
-    {
-      id: "2",
-      title: "Mobile App Design",
-      description:
-        "User interface design for a productivity mobile application",
-      image: "/api/placeholder/400/300",
-      category: "Mobile",
-      tags: ["UI/UX", "Mobile", "App"],
-      createdAt: "2024-02-20",
-    },
-    {
-      id: "3",
-      title: "Website Redesign",
-      description: "Modern website redesign with focus on user experience",
-      image: "/api/placeholder/400/300",
-      category: "Web",
-      tags: ["Web Design", "UX", "Responsive"],
-      createdAt: "2024-03-10",
-    },
-    {
-      id: "4",
-      title: "Print Campaign",
-      description: "Creative print campaign for a fashion brand",
-      image: "/api/placeholder/400/300",
-      category: "Print",
-      tags: ["Print", "Campaign", "Fashion"],
-      createdAt: "2024-04-05",
-    },
-    {
-      id: "5",
-      title: "Packaging Design",
-      description: "Sustainable packaging design for organic products",
-      image: "/api/placeholder/400/300",
-      category: "Packaging",
-      tags: ["Packaging", "Sustainability", "Organic"],
-      createdAt: "2024-05-12",
-    },
-    {
-      id: "6",
-      title: "Digital Illustration",
-      description: "Custom illustrations for a children's book series",
-      image: "/api/placeholder/400/300",
-      category: "Illustration",
-      tags: ["Illustration", "Children", "Book"],
-      createdAt: "2024-06-18",
-    },
-  ];
 
   // Use only real data from database
   const displayProjects = projects;
@@ -151,9 +94,11 @@ export default function ProjectsPage() {
                 >
                   <div className="aspect-square bg-gray-100 rounded-sm mb-4 overflow-hidden">
                     {project.image ? (
-                      <img
+                      <Image
                         src={project.image}
                         alt={project.title}
+                        width={400}
+                        height={400}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     ) : (

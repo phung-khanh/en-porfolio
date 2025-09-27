@@ -53,77 +53,76 @@ export default function ContactPage() {
     {
       icon: Mail,
       title: "Email",
-      value: "hello@designer.com",
+      value: "hello@honganh.com",
       description: "Send me an email anytime",
     },
     {
       icon: Phone,
       title: "Phone",
-      value: "+1 (555) 123-4567",
-      description: "Mon-Fri from 8am to 5pm",
+      value: "+84 (0) 123 456 789",
+      description: "Mon-Fri from 9am to 6pm",
     },
     {
       icon: MapPin,
       title: "Location",
-      value: "New York, NY",
+      value: "Ho Chi Minh City, Vietnam",
       description: "Available for remote work",
     },
   ];
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen bg-white">
       {/* Header Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
+      <section className="pt-32 pb-16 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.h1
+            className="text-4xl md:text-6xl font-light mb-8 tracking-tight"
+            style={{ color: theme.text }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1
-              className="text-5xl md:text-6xl font-bold font-display mb-6"
-              style={{ color: theme.text }}
-            >
-              Get In Touch
-            </h1>
-            <p
-              className="text-xl opacity-80 max-w-2xl mx-auto"
-              style={{ color: theme.text }}
-            >
-              Ready to start your next project? Let&apos;s create something
-              amazing together.
-            </p>
-          </motion.div>
+            Contact
+          </motion.h1>
+          <motion.p
+            className="text-lg font-light max-w-2xl"
+            style={{ color: theme.secondary }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            Ready to start your next project? Let's create something amazing
+            together.
+          </motion.p>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <section className="pb-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Contact Information */}
             <motion.div
               className="space-y-8"
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <div>
                 <h2
-                  className="text-3xl font-bold mb-6"
+                  className="text-2xl font-light mb-6 tracking-wide"
                   style={{ color: theme.text }}
                 >
-                  Let&apos;s Connect
+                  Let's Connect
                 </h2>
                 <p
-                  className="text-lg opacity-80 mb-8"
-                  style={{ color: theme.text }}
+                  className="text-lg font-light leading-relaxed mb-8"
+                  style={{ color: theme.secondary }}
                 >
-                  I&apos;m always excited to work on new projects and
-                  collaborate with creative minds. Whether you have a specific
-                  project in mind or just want to chat about design, I&apos;d
-                  love to hear from you.
+                  I'm always excited to work on new projects and collaborate
+                  with creative minds. Whether you have a specific project in
+                  mind or just want to chat about design, I'd love to hear from
+                  you.
                 </p>
               </div>
 
@@ -138,28 +137,25 @@ export default function ContactPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                     >
-                      <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                        style={{ backgroundColor: `${theme.primary}20` }}
-                      >
-                        <Icon size={24} style={{ color: theme.primary }} />
+                      <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+                        <Icon size={20} style={{ color: theme.text }} />
                       </div>
                       <div>
                         <h3
-                          className="text-lg font-semibold mb-1"
+                          className="text-sm font-medium tracking-wide uppercase mb-1"
                           style={{ color: theme.text }}
                         >
                           {info.title}
                         </h3>
                         <p
-                          className="font-medium mb-1"
-                          style={{ color: theme.primary }}
+                          className="font-light mb-1"
+                          style={{ color: theme.text }}
                         >
                           {info.value}
                         </p>
                         <p
-                          className="text-sm opacity-70"
-                          style={{ color: theme.text }}
+                          className="text-sm font-light"
+                          style={{ color: theme.secondary }}
                         >
                           {info.description}
                         </p>
@@ -172,16 +168,13 @@ export default function ContactPage() {
 
             {/* Contact Form */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <div
-                className="p-8 rounded-2xl shadow-lg"
-                style={{ backgroundColor: theme.background }}
-              >
+              <div className="bg-white border border-gray-200 p-8">
                 <h3
-                  className="text-2xl font-bold mb-6"
+                  className="text-lg font-light mb-8 tracking-wide"
                   style={{ color: theme.text }}
                 >
                   Send a Message
@@ -195,19 +188,21 @@ export default function ContactPage() {
                     transition={{ duration: 0.5 }}
                   >
                     <CheckCircle
-                      size={64}
+                      size={48}
                       className="mx-auto mb-4"
-                      style={{ color: theme.primary }}
+                      style={{ color: theme.text }}
                     />
                     <h4
-                      className="text-xl font-bold mb-2"
+                      className="text-lg font-light mb-2"
                       style={{ color: theme.text }}
                     >
                       Message Sent!
                     </h4>
-                    <p className="opacity-70" style={{ color: theme.text }}>
-                      Thank you for reaching out. I&apos;ll get back to you
-                      soon.
+                    <p
+                      className="font-light"
+                      style={{ color: theme.secondary }}
+                    >
+                      Thank you for reaching out. I'll get back to you soon.
                     </p>
                   </motion.div>
                 ) : (
@@ -216,7 +211,7 @@ export default function ContactPage() {
                       <div>
                         <label
                           htmlFor="name"
-                          className="block text-sm font-medium mb-2"
+                          className="block text-sm font-medium tracking-wide uppercase mb-2"
                           style={{ color: theme.text }}
                         >
                           Name *
@@ -228,19 +223,15 @@ export default function ContactPage() {
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all duration-200"
-                          style={{
-                            backgroundColor: theme.background,
-                            borderColor: `${theme.primary}30`,
-                            color: theme.text,
-                          }}
+                          className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent"
+                          style={{ color: theme.text }}
                           placeholder="Your name"
                         />
                       </div>
                       <div>
                         <label
                           htmlFor="email"
-                          className="block text-sm font-medium mb-2"
+                          className="block text-sm font-medium tracking-wide uppercase mb-2"
                           style={{ color: theme.text }}
                         >
                           Email *
@@ -252,12 +243,8 @@ export default function ContactPage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all duration-200"
-                          style={{
-                            backgroundColor: theme.background,
-                            borderColor: `${theme.primary}30`,
-                            color: theme.text,
-                          }}
+                          className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent"
+                          style={{ color: theme.text }}
                           placeholder="your@email.com"
                         />
                       </div>
@@ -266,7 +253,7 @@ export default function ContactPage() {
                     <div>
                       <label
                         htmlFor="subject"
-                        className="block text-sm font-medium mb-2"
+                        className="block text-sm font-medium tracking-wide uppercase mb-2"
                         style={{ color: theme.text }}
                       >
                         Subject *
@@ -278,12 +265,8 @@ export default function ContactPage() {
                         value={formData.subject}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all duration-200"
-                        style={{
-                          backgroundColor: theme.background,
-                          borderColor: `${theme.primary}30`,
-                          color: theme.text,
-                        }}
+                        className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent"
+                        style={{ color: theme.text }}
                         placeholder="What's this about?"
                       />
                     </div>
@@ -291,7 +274,7 @@ export default function ContactPage() {
                     <div>
                       <label
                         htmlFor="message"
-                        className="block text-sm font-medium mb-2"
+                        className="block text-sm font-medium tracking-wide uppercase mb-2"
                         style={{ color: theme.text }}
                       >
                         Message *
@@ -303,12 +286,8 @@ export default function ContactPage() {
                         onChange={handleInputChange}
                         required
                         rows={6}
-                        className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all duration-200 resize-none"
-                        style={{
-                          backgroundColor: theme.background,
-                          borderColor: `${theme.primary}30`,
-                          color: theme.text,
-                        }}
+                        className="w-full px-0 py-3 border-0 border-b border-gray-300 focus:outline-none focus:border-black transition-colors duration-300 bg-transparent resize-none"
+                        style={{ color: theme.text }}
                         placeholder="Tell me about your project..."
                       />
                     </div>
@@ -316,19 +295,18 @@ export default function ContactPage() {
                     <motion.button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 rounded-lg text-white font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: theme.primary }}
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 border border-black text-black font-medium tracking-wide uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-black hover:text-white"
                       whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                       whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
                           <span>Sending...</span>
                         </>
                       ) : (
                         <>
-                          <Send size={20} />
+                          <Send size={18} />
                           <span>Send Message</span>
                         </>
                       )}

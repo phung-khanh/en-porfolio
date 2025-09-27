@@ -8,9 +8,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Projects", href: "/projects" },
-  { name: "Videos", href: "/videos" },
+  { name: "Works", href: "/projects" },
+  { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -28,41 +27,36 @@ export default function Header() {
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-500 ${
-        isScrolled ? "backdrop-blur-xl shadow-md" : "backdrop-blur-sm"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/90 backdrop-blur-sm border-b border-gray-200"
+          : "bg-transparent"
       }`}
-      style={{
-        background: isScrolled
-          ? "linear-gradient(to right, rgba(255,255,255,0.15), rgba(255,255,255,0.05))"
-          : "rgba(255,255,255,0.05)",
-        borderColor: `${theme.primary}30`,
-      }}
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="max-w-6xl mx-auto flex justify-between items-center h-14 px-4">
+      <div className="max-w-6xl mx-auto flex justify-between items-center h-16 px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div
-            className="w-6 h-6 rounded-full"
-            style={{ backgroundColor: theme.primary }}
-          />
-          <span className="font-semibold" style={{ color: theme.text }}>
+        <Link href="/" className="flex items-center">
+          <span
+            className="text-lg font-light tracking-wide"
+            style={{ color: theme.text }}
+          >
             {settings.siteTitle}
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex gap-6">
+        <nav className="hidden md:flex gap-8">
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className={`text-sm transition-colors ${
+              className={`text-sm font-medium tracking-wide uppercase transition-opacity duration-300 ${
                 pathname === item.href
-                  ? "font-semibold"
-                  : "opacity-70 hover:opacity-100"
+                  ? "opacity-100"
+                  : "opacity-60 hover:opacity-100"
               }`}
               style={{ color: theme.text }}
             >
@@ -84,8 +78,7 @@ export default function Header() {
       {/* Mobile dropdown */}
       {isOpen && (
         <motion.div
-          className="md:hidden flex flex-col px-4 pb-4 backdrop-blur-md"
-          style={{ backgroundColor: `${theme.header}70` }}
+          className="md:hidden flex flex-col px-6 py-4 bg-white border-b border-gray-200"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
@@ -95,7 +88,7 @@ export default function Header() {
               key={item.name}
               href={item.href}
               onClick={() => setIsOpen(false)}
-              className="py-2 text-sm opacity-80 hover:opacity-100"
+              className="py-3 text-sm font-medium tracking-wide uppercase opacity-60 hover:opacity-100 transition-opacity duration-300"
               style={{ color: theme.text }}
             >
               {item.name}

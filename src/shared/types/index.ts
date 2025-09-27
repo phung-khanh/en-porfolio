@@ -5,6 +5,7 @@ export interface Project {
   image: string;
   category: string;
   tags: string[];
+  featured?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -13,8 +14,9 @@ export interface Video {
   id: string;
   title: string;
   description: string;
-  youtubeUrl: string;
-  thumbnail: string;
+  url?: string;
+  youtubeUrl?: string;
+  thumbnail?: string;
   createdAt: Date;
 }
 

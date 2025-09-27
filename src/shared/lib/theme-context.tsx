@@ -4,13 +4,13 @@ import { AdminSettings, Theme } from "@/shared/types";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 const defaultTheme: Theme = {
-  primary: "#F08787",
-  secondary: "#d946ef",
-  accent: "#f97316",
-  background: "#F3F2EC",
-  text: "#1f2937",
-  header: "#FFC7A7",
-  footer: "#FEE2AD",
+  primary: "#000000",
+  secondary: "#666666",
+  accent: "#000000",
+  background: "#FFFFFF",
+  text: "#000000",
+  header: "#FFFFFF",
+  footer: "#FFFFFF",
 };
 
 const defaultSettings: AdminSettings = {
